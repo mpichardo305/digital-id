@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 export default function HomePage() {
   const router = useRouter();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  // const [mobileOpen, setMobileOpen] = useState(false);
   const { email, isValid, isCorporate, error, submitted, setSubmitted, handleEmailChange } =
   useEmailValidation("");
   const showError = submitted && Boolean(error);
@@ -41,72 +41,6 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header
-          className="sticky top-0 z-50 w-full bg-gray-50 px-4 sm:px-4 md:px-6 py-12 md:static md:top-auto md:z-auto"
-        >
-      <div className="max-w-7xl mx-auto flex items-center justify-between rounded-2xl bg-white ring-1 ring-gray-200 px-3 sm:px-3 md:px-3 py-3 md:bg-transparent md:ring-0 md:rounded-none">
-          {/* Logo */}
-          <div className="flex flex-col items-start">
-            <Link href="#">
-              <Image src="/digital-id-logo.png" alt="Digital ID" width={48} height={48} priority />
-            </Link>
-            <span className="mt-1 text-sm font-bold text-black">Digital ID</span>
-          </div>
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-          {/* Backdrop */}
-          <div
-            className={`fixed inset-0 z-50 bg-black/30 transition-opacity md:hidden ${mobileOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
-            onClick={() => setMobileOpen(false)}
-          />
-
-          {/* Panel */}
-          <nav
-            id="mobile-menu"
-            className={`fixed top-0 right-0 z-[60] h-full w-80 max-w-[85%] bg-white shadow-2xl ring-1 ring-gray-200 transition-transform md:hidden
-            ${mobileOpen ? 'translate-x-0' : 'translate-x-full'}`}
-          >
-            <div className="flex items-center justify-between p-4">
-              <span className="text-base font-semibold">Digital ID</span>
-              <button
-                type="button"
-                aria-label="Close menu"
-                onClick={() => setMobileOpen(false)}
-                className="rounded-lg p-2 ring-1 ring-gray-200 bg-white"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="px-4 py-2 space-y-2">
-              <a href="#why-use" onClick={() => setMobileOpen(false)}className="block rounded-lg px-3 py-2 hover:bg-gray-50">Why use Digital IDs</a>
-              <a href="#benefits" onClick={() => setMobileOpen(false)}className="block rounded-lg px-3 py-2 hover:bg-gray-50">Benefits</a>
-              <a href="#signup" onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-2 hover:bg-gray-50">Try Digital ID</a>
-              <a href="#" onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-2 hover:bg-gray-50">Check my status</a>
-            </div>
-          </nav>
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8 py-3 px-6 bg-gray-50/10 backdrop-blur-md rounded-full fixed top-16 right-[max(1rem,calc((100vw-80rem)/2))] z-50">
-            <a href="#why-use" className="text-black hover:text-gray-600 font-medium">
-                Why use Digital IDs
-              </a>
-              <a href="#benefits" className="text-black hover:text-gray-600 font-medium">
-                Benefits
-              </a>
-              <a href="#signup" className="text-black hover:text-gray-600 font-medium">
-                Try Digital ID
-              </a>
-              <a href="#" className="text-black hover:text-gray-600 font-medium">
-                Check my status
-              </a>
-          </nav>
-        </div>
-      </header>
-
     <section className="hero-section w-full py-10 relative pt-6">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
@@ -612,23 +546,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="bg-white border-t border-gray-200 mt-12 md:mt-20">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
-        <div className="flex flex-col items-center space-y-4">
-        {/* Center Logo */}
-            <div className="flex flex-col items-start">
-            <Link href="#">
-              <Image src="/digital-id-logo.png" alt="Digital ID" width={48} height={48} priority />
-            </Link>
-            </div>
-
-            {/* Copyright */}
-            <div className="text-xs md:text-sm text-gray-500">
-              © 2025 Digital ID. All rights reserved.
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

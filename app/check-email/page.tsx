@@ -18,7 +18,7 @@ export default function CheckEmail({
 
       <div className="space-y-4">
         <Link
-          href="/"
+          href="/#signup"
           className="inline-flex items-center justify-center w-full rounded-full bg-black text-white px-6 py-3 font-medium hover:bg-gray-800 transition-colors"
         >
           Enter a new email
@@ -26,7 +26,7 @@ export default function CheckEmail({
 
         <p className="text-sm text-gray-500">
           Didn’t get it? Check spam, or{" "}
-          <Link href="/" className="underline">
+          <Link href="/#signup" className="underline">
             try a different address
           </Link>
           .
