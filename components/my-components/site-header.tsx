@@ -68,9 +68,6 @@ export default function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <Link href="#signup" className="text-black hover:text-gray-600 font-medium">
-              Try Digital ID
-            </Link>
           </nav>
 
           {/* Mobile toggle */}
