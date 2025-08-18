@@ -5,8 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
 
 export default function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -14,13 +13,11 @@ export default function SiteHeader() {
   const toggle = useCallback(() => setMobileOpen(v => !v), []);
   const close = useCallback(() => setMobileOpen(false), []);
 
-  // Close on route / query changes
+  // Close on route changes only (removed search params dependency)
   const pathname = usePathname();
-  const search = useSearchParams();
   useEffect(() => {
     close();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, search?.toString()]);
+  }, [pathname, close]);
 
   // ESC to close
   useEffect(() => {
