@@ -40,10 +40,10 @@ export default function SiteHeader() {
   }, [mobileOpen]);
 
   const navItems = [
-    { href: "#why-use", label: "Why use Digital IDs" },
-    { href: "#benefits", label: "Benefits" },
-    { href: "#signup", label: "Try Digital ID" },
-    { href: "#", label: "Check my status" },
+    { href: "/#why-use", label: "Why use Digital IDs" },
+    { href: "/#benefits", label: "Benefits" },
+    { href: "/#signup", label: "Try Digital ID" },
+    { href: "/", label: "Check my status" },
   ];
 
   return (
