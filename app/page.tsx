@@ -4,22 +4,52 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Menu, X, Shield, Zap, Key, Mail, Download, User, Check } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import { useEmailValidation } from "@/hooks/use-email-validation";
+import { useRouter } from "next/navigation";
+
 
 export default function HomePage() {
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { email, isValid, isCorporate, error, submitted, setSubmitted, handleEmailChange } =
+  useEmailValidation("");
+  const showError = submitted && Boolean(error);
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setFormError(null);
+
+    if (!isValid || !isCorporate || submitting) return;
+
+    try {
+      setSubmitting(true);
+      // await for Resend api shows successful 
+      router.push(`/check-email`);
+    } catch (err: any) {
+      setFormError(err?.message || "Something went wrong. Try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen">
       {/* Header */}
       <header
-          className="sticky top-0 z-50 w-full bg-gray-50 px-4 sm:px-4 md:px-6 py-4
-                    md:static md:top-auto md:z-auto"
+          className="sticky top-0 z-50 w-full bg-gray-50 px-4 sm:px-4 md:px-6 py-12 md:static md:top-auto md:z-auto"
         >
       <div className="max-w-7xl mx-auto flex items-center justify-between rounded-2xl bg-white ring-1 ring-gray-200 px-3 sm:px-3 md:px-3 py-3 md:bg-transparent md:ring-0 md:rounded-none">
           {/* Logo */}
           <div className="flex flex-col items-start">
-          <Image src="/digital-id-logo.png" alt="Digital ID" width={48} height={48} priority />
+            <Link href="#">
+              <Image src="/digital-id-logo.png" alt="Digital ID" width={48} height={48} priority />
+            </Link>
             <span className="mt-1 text-sm font-bold text-black">Digital ID</span>
           </div>
           {/* Mobile Menu Button */}
@@ -42,7 +72,7 @@ export default function HomePage() {
             ${mobileOpen ? 'translate-x-0' : 'translate-x-full'}`}
           >
             <div className="flex items-center justify-between p-4">
-              <span className="text-base font-semibold">Menu</span>
+              <span className="text-base font-semibold">Digital ID</span>
               <button
                 type="button"
                 aria-label="Close menu"
@@ -53,18 +83,18 @@ export default function HomePage() {
               </button>
             </div>
             <div className="px-4 py-2 space-y-2">
-              <a href="#" onClick={() => setMobileOpen(false)}className="block rounded-lg px-3 py-2 hover:bg-gray-50">Why use Digital IDs</a>
-              <a href="#" onClick={() => setMobileOpen(false)}className="block rounded-lg px-3 py-2 hover:bg-gray-50">Benefits</a>
+              <a href="#why-use" onClick={() => setMobileOpen(false)}className="block rounded-lg px-3 py-2 hover:bg-gray-50">Why use Digital IDs</a>
+              <a href="#benefits" onClick={() => setMobileOpen(false)}className="block rounded-lg px-3 py-2 hover:bg-gray-50">Benefits</a>
               <a href="#signup" onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-2 hover:bg-gray-50">Try Digital ID</a>
               <a href="#" onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-2 hover:bg-gray-50">Check my status</a>
             </div>
           </nav>
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8 py-3 px-6 bg-gray-50/10 backdrop-blur-md rounded-full fixed top-16 right-[max(1rem,calc((100vw-80rem)/2))] z-50">
-            <a href="#" className="text-black hover:text-gray-600 font-medium">
+            <a href="#why-use" className="text-black hover:text-gray-600 font-medium">
                 Why use Digital IDs
               </a>
-              <a href="#" className="text-black hover:text-gray-600 font-medium">
+              <a href="#benefits" className="text-black hover:text-gray-600 font-medium">
                 Benefits
               </a>
               <a href="#signup" className="text-black hover:text-gray-600 font-medium">
@@ -77,8 +107,8 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="hero-section w-full py-8 md:py-20 relative">
-        <div className="max-w-7xl mx-auto px-6 md:px-8">
+    <section className="hero-section w-full py-10 relative pt-6">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
             {/* Left Content - More breathing room */}
             <div className="space-y-6 md:space-y-10 relative z-10 pl-4 md:pl-8 order-1 lg:order-1">
@@ -171,62 +201,70 @@ export default function HomePage() {
             >
               <video
                   src="/iPhone_ID_to_Apple_Wallet.mp4"
-                  className="w-full object-cover rounded-[40px] aspect-[805.33/453] max-w-[960px] md:max-w-[1280px] lg:max-w-[1440px] xl:max-w-[1600px] 2xl:max-w-[1800px]"
+                  className="object-cover rounded-[40px] aspect-[805.33/453]"
+                  style={{
+                    maxWidth: "120%",
+                    height: "auto"
+                  }}
                   controls
                   preload="metadata"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
                 />
             </div>
           </div>
 
-          <div className="text-left mt-12 md:mt-16 pt-8 md:pt-12 relative z-10">
-            <p className="text-xs md:text-sm text-gray-400 font-medium mb-6 md:mb-10 tracking-wider">
+          <div className="text-left mt-16 md:mt-20 pt-12 md:pt-16 relative z-10 px-4 md:px-6">
+            <p className="text-xs md:text-sm text-gray-400 font-medium mb-8 md:mb-12 tracking-wider text-left">
               TRUSTED BY
             </p>
-            <div className="grid grid-cols-2 md:flex md:items-center md:space-x-20 gap-6 md:gap-0">
-              <div className="flex items-center">
+          <div className="flex flex-wrap items-center justify-start gap-10 md:gap-20">
+            <div className="flex items-center">
                 <img
                   src="/quicknode-logo.png"
                   alt="QuickNode"
-                  className="h-8 md:h-10 w-auto opacity-250"
+                  className="h-8 md:h-10 w-auto opacity-100 hover:opacity-60 transition-opacity "
                 />
               </div>
               <div className="flex items-center">
                 <img
                   src="/omnitech-logo.png"
                   alt="OMNITEC"
-                  className="h-8 md:h-10 w-auto opacity-250"
+                  className="h-8 md:h-10 w-auto opacity-100 hover:opacity-60 transition-opacity "
                 />
               </div>
-              <div className="flex items-center space-x-6 md:space-x-12 hidden md:flex">
+              {/* <div className="flex items-center space-x-6 md:space-x-12 hidden md:flex"> */}
                 <div className="flex items-center hidden md:flex">
                   <img
                     src="/cross-court-logo.png"
                     alt="CrossCourt"
-                    className="h-14 md:h-14 w-auto opacity-250"
+                    className="h-14 md:h-14 w-auto opacity-100 hover:opacity-60 transition-opacity "
                   />
                 </div>
                 <div className="flex items-center hidden md:flex">
                   <img
                     src="/goldman-properties-logo.png"
                     alt="Goldman Properties"
-                    className="h-10 md:h-12 w-auto opacity-250"
+                    className="h-10 md:h-12 w-auto opacity-100 hover:opacity-60 transition-opacity "
                   />
                 </div>
                 <div className="flex items-center hidden md:flex">
                   <img
                     src="/quicknode-logo.png"
                     alt="QuickNode"
-                    className="h-8 md:h-10 w-auto opacity-250"
+                    className="h-8 md:h-10 w-auto opacity-100 hover:opacity-60 transition-opacity "
                   />
                 </div>
-              </div>
+              {/* </div> */}
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20">
+      <section id="why-use" className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20">
         <div className="text-left mb-8 md:mb-16">
           <p
             className="text-xs md:text-sm text-gray-400 mb-6 md:mb-8 tracking-wider"
@@ -246,7 +284,7 @@ export default function HomePage() {
         <div className="space-y-8 md:grid md:grid-cols-3 md:gap-12 md:space-y-0 mb-12 md:mb-16">
           {/* Unified Access Card */}
           <div className="text-left space-y-4 md:space-y-6 border-b border-gray-100 pb-8 md:border-b-0 md:pb-0">
-            <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-100 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center">
               <Key className="w-6 h-6 md:w-8 md:h-8 text-gray-600" />
             </div>
             <div className="space-y-2 md:space-y-3">
@@ -263,7 +301,7 @@ export default function HomePage() {
 
           {/* Smarter Security Card */}
           <div className="text-left space-y-4 md:space-y-6 border-b border-gray-100 pb-8 md:border-b-0 md:pb-0">
-            <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-100 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center">
               <Shield className="w-6 h-6 md:w-8 md:h-8 text-gray-600" />
             </div>
             <div className="space-y-2 md:space-y-3">
@@ -279,7 +317,7 @@ export default function HomePage() {
 
           {/* Eco-friendly Card */}
           <div className="text-left space-y-4 md:space-y-6">
-            <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-100 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center">
               <Zap className="w-6 h-6 md:w-8 md:h-8 text-gray-600" />
             </div>
             <div className="space-y-2 md:space-y-3">
@@ -306,6 +344,7 @@ export default function HomePage() {
 
       {/* Digital Transformation Section */}
       <section
+        id="benefits"
         className="px-4 md:px-6 py-12 md:py-20"
         style={{ backgroundColor: "#F9FAFB" }}
       >
@@ -524,7 +563,7 @@ export default function HomePage() {
           </div>
 
               {/* Email Form */}
-              <div className="space-y-6 text-left max-w-md w-full mx-auto">
+              <form onSubmit={handleSubmit} className="space-y-6 text-left max-w-md w-full mx-auto">
                 <div className="space-y-3">
                   <label
                     htmlFor="email"
@@ -536,23 +575,38 @@ export default function HomePage() {
                   </label>
                   <Input
                     id="email"
+                    name="email"
                     type="email"
-                    placeholder="E-mail"
-                    className="w-full px-6 py-4 text-medium rounded-full bg-white focus:ring-2 focus:ring-purple-300 transition-all duration-200"
-                    style={{
-                      border: "1px solid #4F378A",
-                    }}
+                    autoComplete="email"
+                    inputMode="email"
+                    placeholder="you@company.com"
+                    value={email}
+                    onChange={handleEmailChange}
+                    aria-invalid={showError}
+                    aria-describedby="email-error"
                     required
+                    className={`w-full px-6 py-4 text-medium rounded-full bg-white focus:ring-2 focus:ring-purple-300 transition-all duration-200 ${
+                      showError ? "ring-1 ring-red-500 focus:ring-red-500" : ""
+                    }`}
+                    style={{ border: "1px solid #4F378A" }}
                   />
+
                   <p className="text-xs mt-2" style={{ color: "#485057" }}>
                     Make sure it's your work email
                   </p>
+                  {submitted && error && (
+                    <p id="email-error" className="text-sm text-red-600">{error}</p>
+                  )}
                 </div>
 
-                <Button className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors">
-                  Validate email
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors disabled:opacity-60"
+                >
+                  {submitting ? "Validating…" : "Validate email"}
                 </Button>
-              </div>
+              </form>
             </div>
           </div>
         </div>
@@ -560,16 +614,12 @@ export default function HomePage() {
 
       <footer className="bg-white border-t border-gray-200 mt-12 md:mt-20">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
-          <div className="flex items-center justify-between">
-            {/* Products Label */}
-            <div className="text-sm md:text-sm md:text-base">
-              Products
-            </div>
-
-            {/* Center Logo */}
+        <div className="flex flex-col items-center space-y-4">
+        {/* Center Logo */}
             <div className="flex flex-col items-start">
-            <Image src="/digital-id-logo.png" alt="Digital ID" width={48} height={48} priority />
-              {/* <span className="mt-1 text-sm font-bold text-black">Digital ID</span> */}
+            <Link href="#">
+              <Image src="/digital-id-logo.png" alt="Digital ID" width={48} height={48} priority />
+            </Link>
             </div>
 
             {/* Copyright */}
