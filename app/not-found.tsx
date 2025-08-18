@@ -1,4 +1,4 @@
-// app/_not-found/page.js
+// app/not-found/page.tsx
 export default function NotFound() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">

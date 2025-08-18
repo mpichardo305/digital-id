@@ -6,29 +6,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
-type NavItem = { href: string; label: string };
-
-type Props = {
-  logoSrc?: string;
-  logoAlt?: string;
-  brand?: string;
-  nav?: NavItem[];
-  className?: string;
-};
-
-export default function SiteHeader({
-  logoSrc = "/digital-id-logo.png",
-  logoAlt = "Digital ID",
-  brand = "Digital ID",
-  nav = [
-    { href: "#why-use", label: "Why use Digital IDs" },
-    { href: "#benefits", label: "Benefits" },
-    { href: "#signup", label: "Try Digital ID" },
-    { href: "#", label: "Check my status" },
-  ],
-  className = "",
-}: Props) {
+export default function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const toggle = useCallback(() => setMobileOpen(v => !v), []);
@@ -62,25 +42,35 @@ export default function SiteHeader({
     };
   }, [mobileOpen]);
 
+  const navItems = [
+    { href: "#why-use", label: "Why use Digital IDs" },
+    { href: "#benefits", label: "Benefits" },
+    { href: "#signup", label: "Try Digital ID" },
+    { href: "#", label: "Check my status" },
+  ];
+
   return (
     <>
-      <header className={`sticky top-0 z-50 w-full bg-gray-50 px-4 sm:px-4 md:px-6 py-12 md:static md:top-auto md:z-auto ${className}`}>
+      <header className="sticky top-0 z-50 w-full bg-gray-50 px-4 sm:px-4 md:px-6 py-12 md:static md:top-auto md:z-auto">
         <div className="max-w-7xl mx-auto flex items-center justify-between rounded-2xl bg-white ring-1 ring-gray-200 px-3 sm:px-3 md:px-3 py-3 md:bg-transparent md:ring-0 md:rounded-none">
           {/* Logo + brand */}
           <div className="flex flex-col items-start">
             <Link href="/">
-              <Image src={logoSrc} alt={logoAlt} width={48} height={48} priority />
+              <Image src="/digital-id-logo.png" alt="Digital ID" width={48} height={48} priority />
             </Link>
-            <span className="mt-1 text-sm font-bold text-black">{brand}</span>
+            <span className="mt-1 text-sm font-bold text-black">Digital ID</span>
           </div>
 
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center space-x-8 py-3 px-6 bg-gray-50/10 backdrop-blur-md rounded-full">
-            {nav.map(item => (
+          {/* Desktop Navigation - Floating Glass */}
+          <nav className="hidden md:flex items-center space-x-8 py-3 px-6 bg-gray-50/10 backdrop-blur-md rounded-full fixed top-16 right-[max(1rem,calc((100vw-80rem)/2))] z-50">
+            {navItems.map(item => (
               <Link key={item.href} href={item.href} className="text-black hover:text-gray-600 font-medium">
                 {item.label}
               </Link>
             ))}
+            <Link href="#signup" className="text-black hover:text-gray-600 font-medium">
+              Try Digital ID
+            </Link>
           </nav>
 
           {/* Mobile toggle */}
@@ -112,8 +102,8 @@ export default function SiteHeader({
         }`}
         aria-label="Mobile navigation"
       >
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <span className="text-base font-semibold">{brand}</span>
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 mr-4 pt-8">
+          <span className="text-base font-semibold">Digital ID</span>
           <button
             type="button"
             aria-label="Close menu"
@@ -124,7 +114,7 @@ export default function SiteHeader({
           </button>
         </div>
         <div className="px-4 py-2 space-y-2">
-          {nav.map(item => (
+          {navItems.map(item => (
             <Link
               key={item.href}
               href={item.href}
