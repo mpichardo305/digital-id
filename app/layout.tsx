@@ -37,11 +37,11 @@ export const metadata: Metadata = {
     url: baseUrl,
     images: [
       {
-        url: "/cornerstone-dig-transf.png", // Create this image (1200x630px)
-        width: 1200,
-        height: 630,
+        url: "/dig-id-gif.gif",
+        width: 800, 
+        height: 450,
         alt: "Digital ID",
-        type: "image/png",
+        type: "image/gif",
       },
     ],
     type: "website",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Digital ID",
     description: "Your home for digitizing your workforce access control keys",
-    images: ["/cornerstone-dig-transf.png"],
+    images: ["/dig-id-gif.gif"],
   },
   icons: {
     icon: '/favicon.ico',
