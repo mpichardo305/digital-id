@@ -48,8 +48,8 @@ export default function SiteHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full bg-gray-50 px-4 sm:px-4 md:px-6 py-12 md:static md:top-auto md:z-auto">
-        <div className="max-w-7xl mx-auto flex items-center justify-between rounded-2xl bg-white ring-1 ring-gray-200 px-3 sm:px-3 md:px-3 py-3 md:bg-transparent md:ring-0 md:rounded-none">
+      <header className="sticky top-0 z-50 w-full bg-white px-4 sm:px-4 md:px-6 py-12 md:py-12 md:static md:top-auto md:z-auto">
+        <div className="max-w-7xl mx-auto flex items-center justify-between rounded-2xl shadow-lg bg-white ring-1 ring-gray-200 px-3 sm:px-3 md:px-3 py-3 md:bg-transparent md:ring-0 md:rounded-none md:shadow-none">
           {/* Logo + brand */}
           <div className="flex flex-col items-start">
             <Link href="/">
@@ -59,7 +59,7 @@ export default function SiteHeader() {
           </div>
 
           {/* Desktop Navigation - Floating Glass */}
-          <nav className="hidden md:flex items-center space-x-8 py-3 px-6 bg-gray-50/10 backdrop-blur-md rounded-full fixed top-16 right-[max(1rem,calc((100vw-80rem)/2))] z-50">
+          <nav className="hidden md:flex items-center space-x-8 py-3 px-6 bg-gray-50/10 backdrop-blur-md rounded-full md:fixed md:top-16 md:right-[max(1rem,calc((100vw-80rem)/2))] md:z-50">
             {navItems.map(item => (
               <Link key={item.href} href={item.href} className="text-black hover:text-gray-600 font-medium">
                 {item.label}
