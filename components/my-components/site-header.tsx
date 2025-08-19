@@ -48,7 +48,7 @@ export default function SiteHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full bg-white px-4 sm:px-4 md:px-6 py-12 md:py-12 md:static md:top-auto md:z-auto">
+      <header className="sticky top-0 z-50 w-full bg-gray-50 px-4 sm:px-4 md:px-6 py-12 md:py-12 md:static md:top-auto md:z-auto">
         <div className="max-w-7xl mx-auto flex items-center justify-between rounded-2xl shadow-lg bg-white ring-1 ring-gray-200 px-3 sm:px-3 md:px-3 py-3 md:bg-transparent md:ring-0 md:rounded-none md:shadow-none">
           {/* Logo + brand */}
           <div className="flex flex-col items-start">
