@@ -59,7 +59,7 @@ export default function SiteHeader() {
           </div>
 
           {/* Desktop Navigation - Floating Glass */}
-          <nav className="hidden md:flex items-center space-x-8 py-3 px-6 bg-gray-50/10 backdrop-blur-md rounded-full md:fixed md:top-16 md:right-[max(1rem,calc((100vw-80rem)/2))] md:z-50">
+          <nav className="hidden md:flex items-center space-x-8 py-5 px-6 bg-white/40 backdrop-blur-[30px] rounded-full md:fixed md:top-16 md:right-[max(1rem,calc((100vw-80rem)/2))] md:z-50">
             {navItems.map(item => (
               <Link key={item.href} href={item.href} className="text-black hover:text-gray-600 font-medium">
                 {item.label}
