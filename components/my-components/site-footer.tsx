@@ -15,7 +15,7 @@ export default function SiteFooter({
   year = new Date().getFullYear(),
 }: Props) {
   return (
-    <footer className="bg-white border-t border-gray-200 mt-12 md:mt-20">
+    <footer className="bg-white border-t border-gray-200 mt-12">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
         <div className="flex flex-col items-center space-y-4">
           {/* Logo */}

@@ -369,7 +369,7 @@ export default function HomePage() {
         id="signup"
         className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20"
       >
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto md:pt-24">
           {/* White Modal Container */}
           <div
             className="bg-white p-8 md:p-12"
