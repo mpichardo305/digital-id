@@ -45,7 +45,7 @@ export default function HomePage() {
       <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
             {/* Left Content - More breathing room */}
-            <div className="space-y-6 md:space-y-10 relative z-10 pl-4 md:pl-8 order-1 lg:order-1">
+            <div className="space-y-6 md:space-y-10 relative z-10 order-1 lg:order-1">
               <div className="space-y-3 md:space-y-6">
                 <h1 className="text-4xl md:text-6xl font-semibold text-black leading-[1.1] tracking-tight">
                   Turn your badge
@@ -68,7 +68,7 @@ export default function HomePage() {
                 }}
               >
                 {/* Step 1 - Clickable */}
-                <div className="bg-white/90 backdrop-blur-sm rounded-full px-6 py-4 flex items-center justify-between shadow-sm">
+                <div className="bg-white backdrop-blur-sm rounded-full px-5 py-3 flex items-center gap-4 px-6 w-[468px] h-16">
                   <div className="flex items-center space-x-4">
                     <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0">
                       <Mail className="w-4 h-4 text-white" />
@@ -85,7 +85,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Step 2 - Plain styling */}
-                <div className="bg-white/90 backdrop-blur-sm rounded-full px-6 py-4 flex items-center justify-between shadow-sm">
+                <div className="bg-white backdrop-blur-sm rounded-full px-5 py-3 flex items-center gap-4 px-6 w-[468px] h-16">
                   <div className="flex items-center space-x-4">
                     <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0">
                       <Download className="w-4 h-4 text-white" />
@@ -99,7 +99,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Step 3 - Plain text */}
-                <div className="bg-white/90 backdrop-blur-sm rounded-full px-6 py-4 flex items-center justify-between shadow-sm">
+                <div className="bg-white backdrop-blur-sm rounded-full px-5 py-3 flex items-center gap-4 px-6 w-[468px] h-16">
                   <div className="flex items-center space-x-4">
                     <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0">
                       <User className="w-4 h-4 text-white" />
@@ -128,9 +128,12 @@ export default function HomePage() {
             </div>
 
             <div
-              className="flex justify-center lg:justify-center relative z-10 order-2 lg:order-2"
+              className="flex justify-center lg:justify-center relative z-10 order-2 lg:order-2 backdrop-blur-sm"
               style={{
-                filter: "drop-shadow(0 0 25px rgba(147, 51, 234, 0.06))",
+                filter: `
+                  drop-shadow(0 0 25px rgba(147, 51, 234, 0.06))
+                  drop-shadow(0 0 50px rgba(147, 51, 234, 0.04))
+                `
               }}
             >
               <video
@@ -150,7 +153,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="text-left mt-16 md:mt-20 pt-12 md:pt-16 relative z-10 px-4 md:px-6">
+          <div className="text-left mt-16 md:mt-20 pt-12 md:pt-16 relative z-10 px-4 md:px-6 mb-14">
             <p className="text-xs md:text-sm text-gray-400 font-medium mb-8 md:mb-12 tracking-wider text-left">
               TRUSTED BY
             </p>
@@ -198,8 +201,8 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section id="why-use" className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20">
-        <div className="text-left mb-8 md:mb-16">
+      <section id="why-use" className="w-full py-12 md:py-20" style={{backgroundColor:"#FFFFFF"}}>
+        <div className="max-w-7xl mx-auto px-4 md:px-6 ">
           <p
             className="text-xs md:text-sm text-gray-400 mb-6 md:mb-8 tracking-wider"
             style={{
@@ -213,13 +216,13 @@ export default function HomePage() {
           >
             WHY USE DIGITAL IDS
           </p>
-        </div>
+       
 
         <div className="space-y-8 md:grid md:grid-cols-3 md:gap-12 md:space-y-0 mb-12 md:mb-16">
           {/* Unified Access Card */}
           <div className="text-left space-y-4 md:space-y-6 border-b border-gray-100 pb-8 md:border-b-0 md:pb-0">
             <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center">
-              <Key className="w-6 h-6 md:w-8 md:h-8 text-gray-600" />
+              <Key className="w-6 h-6 md:w-8 md:h-8 text-black" />
             </div>
             <div className="space-y-2 md:space-y-3">
               <h3 className="text-lg md:text-xl font-semibold text-black">
@@ -236,7 +239,7 @@ export default function HomePage() {
           {/* Smarter Security Card */}
           <div className="text-left space-y-4 md:space-y-6 border-b border-gray-100 pb-8 md:border-b-0 md:pb-0">
             <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center">
-              <Shield className="w-6 h-6 md:w-8 md:h-8 text-gray-600" />
+              <Shield className="w-6 h-6 md:w-8 md:h-8 text-black" />
             </div>
             <div className="space-y-2 md:space-y-3">
               <h3 className="text-lg md:text-xl font-semibold text-black">
@@ -252,7 +255,7 @@ export default function HomePage() {
           {/* Eco-friendly Card */}
           <div className="text-left space-y-4 md:space-y-6">
             <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center">
-              <Zap className="w-6 h-6 md:w-8 md:h-8 text-gray-600" />
+              <Zap className="w-6 h-6 md:w-8 md:h-8 text-black" />
             </div>
             <div className="space-y-2 md:space-y-3">
               <h3 className="text-lg md:text-xl font-semibold text-black">
@@ -264,8 +267,11 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-        </div>
+        
 
+        
+        </div>
+        </div>
         {/* CTA Button */}
         <div className="text-center">
           <Button
@@ -280,7 +286,7 @@ export default function HomePage() {
       <section
         id="benefits"
         className="px-4 md:px-6 py-12 md:py-20"
-        style={{ backgroundColor: "#F9FAFB" }}
+        style={{ backgroundColor: "#F5F5F5" }}
       >
         <div className="max-w-7xl mx-auto">
           <div className="space-y-8 lg:grid lg:grid-cols-2 lg:gap-16 lg:space-y-0 items-center">
@@ -325,12 +331,12 @@ export default function HomePage() {
       {/* Cybersecurity Section */}
       <section 
         className="px-4 md:px-6 py-12 md:py-20"
-        style={{ backgroundColor: "#F9FAFB" }}
+        style={{ backgroundColor: "#FAFAFA" }}
       >
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
             {/* Left Content - Order 2 on mobile, 1 on desktop */}
-            <div className="space-y-4 md:space-y-6 order-2 lg:order-1">
+            <div className="space-y-4 md:space-y-6 order-2 lg:order-1 mt-24">
               <h2 className="text-3xl md:text-5xl font-semibold text-black leading-tight">
                 Reduce your risks of cyberattacks
               </h2>
@@ -351,6 +357,7 @@ export default function HomePage() {
                   src="/cybershield.png"
                   alt="Cybersecurity Shield"
                   className="w-[550px] h-[385px] md:h-[480px] object-cover object-top"
+                  style={{ backgroundColor: "#F0F4F8" }}
                 />
               </div>
             </div>
@@ -365,24 +372,28 @@ export default function HomePage() {
         <div className="max-w-2xl mx-auto">
           {/* White Modal Container */}
           <div
-            className="bg-white rounded-2xl p-8 md:p-12"
+            className="bg-white p-8 md:p-12"
             style={{
               filter: "drop-shadow(0 0 25px rgba(147, 51, 234, 0.06))",
+              maxWidth: "572px",
+              minHeight: "502px",
+              borderRadius: "16px",
+              margin: "0 auto"
             }}
           >
-            <div className="text-center space-y-8">
-            <h2 className="text-black whitespace-nowrap text-xl">
+            <div className="mx-auto max-w-[640px] px-2 pt-4">
+            <h2 className="text-[#625B71] whitespace-nowrap text-xl leading-9">
               Get your first Digital ID for FREE
             </h2>
 
           {/* Horizontal Progress Steps */}
-          <div className="grid grid-cols-5 items-start py-8 max-w-md mx-auto">
+          <div className="grid grid-cols-5 items-start py-12 max-w-md mx-auto">
             {/* Step 1 - Completed */}
             <div className="flex flex-col items-center space-y-3">
-              <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center relative z-10">
+              <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center relative z-10">
                 <Check className="w-4 h-4 text-white" />
               </div>
-              <div className="text-xs font-medium text-gray-700 text-center whitespace-nowrap">
+              <div className="text-[10px] font-medium text-[#6F6F6F] text-center whitespace-nowrap">
                 Verify email address
               </div>
             </div>
@@ -396,8 +407,8 @@ export default function HomePage() {
             <div className="flex flex-col items-center space-y-3">
               <div className="relative flex items-center justify-center">
                 {/* Black filled center circle */}
-                <div className="w-8 h-8 bg-white border border-black rounded-full z-20 relative flex items-center justify-center">
-                  <div className="w-1.5 h-1.5 bg-black rounded-full"></div>
+                <div className="w-6 h-6 bg-white border border-black rounded-full z-20 relative flex items-center justify-center">
+                  <div className="w-1 h-1 bg-black rounded-full"></div>
                   {/* Pulse rings - expanding from black center */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div
@@ -436,7 +447,7 @@ export default function HomePage() {
                 </div>
                 </div>
               </div>
-              <div className="text-xs font-medium text-gray-700 text-center whitespace-nowrap">
+              <div className="text-[10px] font-medium text-[#6F6F6F] text-center whitespace-nowrap">
                 Upload photo & ID
               </div>
             </div>
@@ -450,8 +461,8 @@ export default function HomePage() {
             <div className="flex flex-col items-center space-y-3">
               <div className="relative flex items-center justify-center">
                 {/* circle */}
-                <div className="w-8 h-8 bg-white border border-black rounded-full z-20 relative flex items-center justify-center">
-                  <div className="w-1.5 h-1.5 bg-black rounded-full"></div>
+                <div className="w-6 h-6 bg-white border border-black rounded-full z-20 relative flex items-center justify-center">
+                  <div className="w-1 h-1 bg-black rounded-full"></div>
                   {/* Pulse rings - expanding from black center */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div
@@ -490,7 +501,7 @@ export default function HomePage() {
                 </div>
                 </div>  
               </div>
-              <div className="text-xs font-medium text-gray-700 text-center min-h-[1rem] whitespace-nowrap">
+              <div className="text-[10px] font-medium text-[#6F6F6F] text-center min-h-[1rem] whitespace-nowrap">
                 Download ID
               </div>
             </div>
@@ -498,10 +509,10 @@ export default function HomePage() {
 
               {/* Email Form */}
               <form onSubmit={handleSubmit} className="space-y-6 text-left max-w-md w-full mx-auto">
-                <div className="space-y-3">
+                <div className="space-y-3 mb-22">
                   <label
                     htmlFor="email"
-                    className="block text-sm font-medium"
+                    className="block text-sm font-400"
                     style={{ color: "#625B71" }}
                   >
                     Corporate email address{" "}
@@ -519,13 +530,13 @@ export default function HomePage() {
                     aria-invalid={showError}
                     aria-describedby="email-error"
                     required
-                    className={`w-full px-6 py-4 text-medium rounded-full bg-white focus:ring-2 focus:ring-purple-300 transition-all duration-200 ${
+                    className={`w-full px-6 text-medium rounded-full bg-white focus:ring-2 focus:ring-purple-300 transition-all duration-200 ${
                       showError ? "ring-1 ring-red-500 focus:ring-red-500" : ""
                     }`}
-                    style={{ border: "1px solid #4F378A" }}
+                    style={{ border: "1px solid #4F378A", height: "54px" }}
                   />
 
-                  <p className="text-xs mt-2" style={{ color: "#485057" }}>
+                  <p className="text-xs mt-2 text-gray-500">
                     Make sure it's your work email
                   </p>
                   {submitted && error && (
