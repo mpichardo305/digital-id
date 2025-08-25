@@ -32,25 +32,43 @@ export const metadata: Metadata = {
   title: "Digital ID",
   description: "Your home for digitizing your workforce access control keys",
   openGraph: {
+    type: "website",
+    url: baseUrl,
     title: "Digital ID",
     description: "Your home for digitizing your workforce access control keys",
-    url: baseUrl,
+    // Fallback static image (still for platforms that ignore video)
     images: [
       {
-        url: "/dig-id-gif.gif",
-        width: 800, 
-        height: 450,
+        url: "/dig-id-preview.png", // export a clean poster frame (1200x630 ideal)
+        width: 1200,
+        height: 630,
         alt: "Digital ID",
-        type: "image/gif",
       },
     ],
-    type: "website",
+    // Animated preview
+    videos: [
+      {
+        url: "/dig-id-open-graph.mp4",           // put the file in /public
+        width: 800,
+        height: 450,
+        type: "video/mp4",
+      },
+    ],
   },
+  // --- Twitter / X (use a Player card for motion) ---
   twitter: {
-    card: "summary_large_image",
+    card: "player",
     title: "Digital ID",
     description: "Your home for digitizing your workforce access control keys",
-    images: ["/dig-id-gif.gif"],
+    images: ["/dig-id-preview.png"],            // poster image
+    players: [
+      {
+        playerUrl: `${baseUrl}/twitter-player`,      // <-- iframe-friendly page
+        streamUrl: `${baseUrl}/dig-id-open-graph.mp4`, // <-- the MP4 itself
+        width: 800,
+        height: 450,
+      },
+    ],
   },
   icons: {
     icon: '/favicon.ico',
