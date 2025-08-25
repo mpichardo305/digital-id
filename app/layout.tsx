@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     // Fallback static image (still for platforms that ignore video)
     images: [
       {
-        url: "/dig-id-preview.png", // export a clean poster frame (1200x630 ideal)
+        url: "/cornerstone-dig-transf.png", // export a clean poster frame (1200x630 ideal)
         width: 1200,
         height: 630,
         alt: "Digital ID",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     card: "player",
     title: "Digital ID",
     description: "Your home for digitizing your workforce access control keys",
-    images: ["/dig-id-preview.png"],            // poster image
+    images: ["/cornerstone-dig-transf.png"],            // poster image
     players: [
       {
         playerUrl: `${baseUrl}/twitter-player`,      // <-- iframe-friendly page
