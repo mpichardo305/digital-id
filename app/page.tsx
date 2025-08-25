@@ -8,10 +8,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { useEmailValidation } from "@/hooks/use-email-validation";
 import { useRouter } from "next/navigation";
-
+import { createClient } from '@/utils/supabase/client'
 
 export default function HomePage() {
   const router = useRouter();
+  const supabase = createClient();
   // const [mobileOpen, setMobileOpen] = useState(false);
   const { email, isValid, isCorporate, error, submitted, setSubmitted, handleEmailChange } =
   useEmailValidation("");
@@ -19,6 +20,9 @@ export default function HomePage() {
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
+
+  const [emailSent, setEmailSent] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,15 +32,29 @@ export default function HomePage() {
     if (!isValid || !isCorporate || submitting) return;
 
     try {
-      setSubmitting(true);
-      // await for Resend api shows successful 
-      router.push(`/check-email`);
-    } catch (err: any) {
-      setFormError(err?.message || "Something went wrong. Try again.");
+      // This triggers Supabase Auth which triggers the Auth Hook
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          // This tells Supabase where to redirect after verification
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/auth/callback?next=/onboarding/step-2`,
+          shouldCreateUser: true, // Creates user if doesn't exist
+        }
+      })
+
+      if (error) throw error
+
+      // Success! The Auth Hook will handle sending the custom email
+      setEmailSent(true)
+      alert('Check your email for the verification link!')
+      
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Failed to send verification email')
     } finally {
-      setSubmitting(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen">
@@ -551,6 +569,9 @@ export default function HomePage() {
                 >
                   {submitting ? "Validating…" : "Validate email"}
                 </Button>
+                {emailSent && (
+                  <p>We've sent a verification link to {email}</p>
+                )}
               </form>
             </div>
           </div>
