@@ -13,7 +13,7 @@ export default function OnboardingStep3() {
       <div className="max-w-2xl mx-auto">
       {/* White Modal Container */}
           <div
-            className="bg-white p-8 md:p-12"
+            className="bg-white/8 p-8 md:p-12"
             style={{
               filter: "drop-shadow(0 0 25px rgba(147, 51, 234, 0.06))",
               maxWidth: "572px",
@@ -24,7 +24,7 @@ export default function OnboardingStep3() {
           >
             <div className="mx-auto max-w-[640px] px-2 pt-4">
               <h2 className="text-[#625B71] whitespace-nowrap text-xl leading-9">
-                Your Digital ID is Ready!
+                Your Digital ID is processing!
               </h2>
 
               {/* Horizontal Progress Steps */}
@@ -71,13 +71,19 @@ export default function OnboardingStep3() {
               </div>
 
               <div className="flex flex-col items-center space-y-8 py-6">
-                <div className="flex items-center justify-center space-x-3 my-4 mt-20 mb-40">
+              <div className="text-center">
+                    <h3 className="text-xl font-semibold mb-2">Thank you for your patience</h3>
+                    <p className="text-gray-600">
+                        We're working on your Digital ID. You'll receive an email when it's ready.
+                    </p>
+                </div>
+                <div className="flex items-center justify-center space-x-3 my-4 mt-20 mb-40">                
                   <div className="w-3 h-3 bg-black rounded-full"></div>
                   <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
                   <div className="w-3 h-3 bg-purple-300 rounded-full"></div>
                 </div>
                 <Button
-                  onClick={() => window.location.href = "/dashboard"}
+                  onClick={() => window.location.href = "/thank-you"}
                   className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors"
                 >
                   Next

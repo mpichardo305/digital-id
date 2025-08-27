@@ -37,7 +37,7 @@ export default function HomePage() {
         email: email,
         options: {
           // This tells Supabase where to redirect after verification
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/auth/callback?next=/onboarding/step-2`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding/step-2`,
           shouldCreateUser: true, // Creates user if doesn't exist
         }
       })
@@ -86,7 +86,7 @@ export default function HomePage() {
                 }}
               >
                 {/* Step 1 - Clickable */}
-                <div className="bg-white backdrop-blur-sm rounded-full flex items-center gap-4 px-5 md:px-6 w-full max-w-[350px] md:w-[468px] h-14 md:h-16">
+                <div className="bg-white backdrop-blur-sm rounded-full flex items-center gap-4 px-5 md:px-6 w-full max-w-[380px] md:max-w-[500px] h-14 md:h-16">
                   <div className="flex items-center space-x-4">
                     <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0">
                       <Mail className="w-4 h-4 text-white" />
@@ -103,7 +103,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Step 2 - Plain styling */}
-                <div className="bg-white backdrop-blur-sm rounded-full flex items-center gap-4 px-5 md:px-6 w-full max-w-[350px] md:w-[468px] h-14 md:h-16">
+                <div className="bg-white backdrop-blur-sm rounded-full flex items-center gap-4 px-5 md:px-6 w-full max-w-[380px] md:max-w-[500px] h-14 md:h-16">
                   <div className="flex items-center space-x-4">
                     <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0">
                       <Download className="w-4 h-4 text-white" />
@@ -117,7 +117,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Step 3 - Plain text */}
-                <div className="bg-white backdrop-blur-sm rounded-full flex items-center gap-4 px-5 md:px-6 w-full max-w-[350px] md:w-[468px] h-14 md:h-16">
+                <div className="bg-white backdrop-blur-sm rounded-full flex items-center gap-4 px-5 md:px-6 w-full max-w-[380px] md:max-w-[500px] h-14 md:h-16">
                   <div className="flex items-center space-x-4">
                     <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center flex-shrink-0">
                       <User className="w-4 h-4 text-white" />

@@ -193,7 +193,7 @@ export default function OnboardingStep2() {
         <div className="max-w-2xl mx-auto">
           {/* White Modal Container */}
           <div
-            className="bg-white p-8 md:p-12"
+            className="bg-white/8 p-8 md:p-12"
             style={{
               filter: "drop-shadow(0 0 25px rgba(147, 51, 234, 0.06))",
               maxWidth: "572px",
