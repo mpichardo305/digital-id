@@ -41,12 +41,42 @@ export default function HomePage() {
           shouldCreateUser: true, // Creates user if doesn't exist
         }
       })
+      
 
       if (error) throw error
 
       // Success! The Auth Hook will handle sending the custom email
       setEmailSent(true)
       alert('Check your email for the verification link!')
+
+      // --- Custom Supabase logic for onboarding and email_verifications ---
+      // Generate a token_hash (for demo, use crypto.randomUUID())
+      const token_hash = crypto.randomUUID();
+      const nowNotIso = new Date();
+      const now = now.toISOString();
+      const expiresAt = new Date(nowNotIso.getTime() + 60 * 60 * 1000).toISOString();
+
+      // 1. Insert into email_verifications
+      await supabase
+        .from('email_verifications')
+        .insert({
+          updated_at: now,
+          token: token_hash,
+          email: email,
+          expires_at: expiresAt,
+          used: false,
+          created_at: now,
+        });
+
+      // 2. Update users table (set onboarding_step=1, created_at=now)
+      await supabase
+        .from('users')
+        .update({
+          onboarding_step: 1,
+          created_at: now,
+        })
+        .eq('email', email);
+      // --- End custom logic ---
       
     } catch (error) {
       console.error('Error:', error)

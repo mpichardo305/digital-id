@@ -155,11 +155,25 @@ export default function OnboardingStep2() {
             email: user.email,
             onboarding_step: 2
           });
-        
         if (createUserError) {
           console.error("Failed to create user:", createUserError);
           throw new Error(`Failed to create user: ${createUserError.message}`);
         }
+        //add email_verifications table
+        const { error: emailVerificationError } = await supabase
+        .from('email_verifications')
+        .insert({
+          email: user.email,
+          token: crypto.randomUUID(),
+          expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toISOString(),
+          used: false,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        });
+      if (emailVerificationError) {
+        console.error("Failed to create email verification:", emailVerificationError);
+        throw new Error(`Failed to create email verification: ${emailVerificationError.message}`);
+      }
       }
 
       // Now proceed with the user_profiles upsert
@@ -169,9 +183,10 @@ export default function OnboardingStep2() {
           user_id: user.id,
           full_name: fullName,
           title: title,
+          profile_completed: true,
           photo_id_url: photoIdUrl,
           selfie_url: selfieUrl,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         });
 
       if (updateError) throw new Error(`Failed to update profile: ${updateError.message}`);

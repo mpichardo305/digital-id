@@ -49,6 +49,33 @@ export async function GET(request: Request) {
       // Email verified successfully! The session will be established automatically
       // We'll let the client-side handle any additional user data updates
       
+      // Get the user from the session (assume always present after verification)
+      const { data: { user } } = await supabase.auth.getUser();
+      const email = user?.email;
+      const userId = user?.id;
+      const now = new Date().toISOString();
+
+      // Update users table
+      await supabase
+        .from('users')
+        .update({
+          email_verified: true,
+          updated_at: now,
+          email_verified_at: now,
+          onboarding_step: 2,
+        })
+        .eq('id', userId);
+
+      // Update email_verifications table
+      await supabase
+        .from('email_verifications')
+        .update({
+          used: true,
+          used_at: now,
+          email: email,
+        })
+        .eq('token', token_hash);
+      
     } catch (error) {
       console.error('Auth callback error:', error)
       // Redirect to error page or back to signup
