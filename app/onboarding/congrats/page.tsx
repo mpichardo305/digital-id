@@ -1,17 +1,29 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function CongratsStep() {
   const router = useRouter();
+  
+  useEffect(() => {
+    // Redirect to step-3
+    router.replace("/onboarding/step-3");
+  }, [router]);
+  
+  // Return null or a loading state while redirecting
+  return null;
+}
 
+/* Original congratulations page is commented out below
+import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
+
+export default function CongratsStepOriginal() {
   return (
     <div className="min-h-screen">
       <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20">
         <div className="max-w-2xl mx-auto md:pt-24">
-          {/* White Modal Container */}
           <div
             className="bg-white p-8 md:p-12"
             style={{
@@ -27,9 +39,7 @@ export default function CongratsStep() {
                 Your Digital ID is Ready!
               </h2>
 
-              {/* Horizontal Progress Steps */}
               <div className="grid grid-cols-5 items-start py-12 max-w-md mx-auto">
-                {/* Step 1 - Completed */}
                 <div className="flex flex-col items-center space-y-3">
                   <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center relative z-10">
                     <Check className="w-4 h-4 text-white" />
@@ -39,12 +49,10 @@ export default function CongratsStep() {
                   </div>
                 </div>
 
-                {/* Horizontal connector line */}
                 <div className="flex items-center -mx-6">
                   <div className="h-px bg-black w-full mt-4"></div>
                 </div>
 
-                {/* Step 2 - Completed */}
                 <div className="flex flex-col items-center space-y-3">
                   <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center relative z-10">
                     <Check className="w-4 h-4 text-white" />
@@ -54,12 +62,10 @@ export default function CongratsStep() {
                   </div>
                 </div>
 
-                {/* Horizontal connector line */}
                 <div className="flex items-center -mx-6">
                   <div className="h-px bg-black w-full mt-4"></div>
                 </div>
 
-                {/* Step 3 - Current */}
                 <div className="flex flex-col items-center space-y-3">
                   <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center relative z-10">
                     <Check className="w-4 h-4 text-white" />
@@ -79,7 +85,6 @@ export default function CongratsStep() {
                 </div>
 
                 <div className="w-64 h-96 bg-gray-100 rounded-lg flex items-center justify-center">
-                  {/* This would be your Digital ID preview */}
                   <p className="text-gray-500">Digital ID Preview</p>
                 </div>
 
@@ -97,3 +102,4 @@ export default function CongratsStep() {
     </div>
   );
 }
+*/

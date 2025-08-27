@@ -13,7 +13,7 @@ export default function OnboardingStep3() {
       <div className="max-w-2xl mx-auto">
       {/* White Modal Container */}
           <div
-            className="bg-white/8 p-8 md:p-12"
+            className="bg-white p-8 md:p-12"
             style={{
               filter: "drop-shadow(0 0 25px rgba(147, 51, 234, 0.06))",
               maxWidth: "572px",
@@ -82,12 +82,12 @@ export default function OnboardingStep3() {
                   <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
                   <div className="w-3 h-3 bg-purple-300 rounded-full"></div>
                 </div>
-                <Button
+                {/* <Button
                   onClick={() => window.location.href = "/thank-you"}
                   className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors"
                 >
                   Next
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
