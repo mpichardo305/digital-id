@@ -191,6 +191,16 @@ export default function OnboardingStep2() {
 
       if (updateError) throw new Error(`Failed to update profile: ${updateError.message}`);
 
+      //update users table
+      const { error: userUpdateError } = await supabase
+        .from('users')
+        .update({
+          onboarding_step: 3,
+        })
+        .eq('id', user.id);
+
+      if (userUpdateError) throw new Error(`Failed to update user: ${userUpdateError.message}`);
+
       // Success! Redirect to step 3 or dashboard
       router.push('/onboarding/step-3');
       
