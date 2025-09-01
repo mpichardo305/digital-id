@@ -11,7 +11,15 @@ const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
-
+// --- AUTHORIZATION CHECK (add this at the very top) ---
+const authz = req.headers.get("authorization") ?? "";
+if (authz !== `Bearer ${Deno.env.get("SEND_EMAIL_HOOK_SECRET")}`) {
+  return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    status: 401,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+// --- END AUTHORIZATION CHECK ---
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {

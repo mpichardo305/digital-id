@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useEmailValidation } from "@/hooks/use-email-validation";
 import { useRouter } from "next/navigation";
 import { createClient } from '@/utils/supabase/client'
-import { useEffect, localStorage } from "react";
+import { useEffect } from "react";
 
 export default function HomePage() {
   const router = useRouter();
