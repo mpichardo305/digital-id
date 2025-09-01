@@ -21,10 +21,7 @@ const poppins = Poppins({
 })
 
 
-const baseUrl = process.env.VERCEL_URL 
-  ? `https://${process.env.VERCEL_URL}`
-  : process.env.NODE_ENV === 'production'
-    ? 'https://trydigitalid.com'
+const baseUrl = `https://${process.env.VERCEL_URL || "trydigitalid.com"}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
