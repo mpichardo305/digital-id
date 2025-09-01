@@ -53,27 +53,26 @@ export const metadata: Metadata = {
         type: "video/mp4",
       },
     ],
+    locale: "en_US",
   },
   // --- Twitter / X (use a Player card for motion) ---
   twitter: {
     card: "player",
     title: "Digital ID",
     description: "Your home for digitizing your workforce access control keys",
-    images: ["/cornerstone-dig-transf.png"],            // poster image
-    players: [
-      {
-        playerUrl: `${baseUrl}/twitter-player`,      // <-- iframe-friendly page
-        streamUrl: `${baseUrl}/dig-id-open-graph.mp4`, // <-- the MP4 itself
-        width: 800,
-        height: 450,
-      },
-    ],
+    images: [`${baseUrl}/cornerstone-dig-transf.png`], 
+    player: {                                         
+      url: `${baseUrl}/twitter-player`,
+      width: 800,
+      height: 450,
+    },
   },
+  themeColor: "#000000",                             // ✅ mobile tint
+  robots: { index: true, follow: true },             // ✅ explicit
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
-    
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
   },
 }
 
