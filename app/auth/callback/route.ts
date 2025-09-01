@@ -7,6 +7,7 @@ export async function GET(request: Request) {
   const token_hash = requestUrl.searchParams.get('token_hash')
   const type = requestUrl.searchParams.get('type')
   const next = requestUrl.searchParams.get('next') || '/onboarding/step-2'
+  const my_token = requestUrl.searchParams.get('my_token');
 
   if (token_hash && type) {
     try {
@@ -48,23 +49,24 @@ export async function GET(request: Request) {
       
       // Email verified successfully! The session will be established automatically
       // We'll let the client-side handle any additional user data updates
-      
+      console.log('Auth callback: inside try block, about to get user');
       // Get the user from the session (assume always present after verification)
       const { data: { user } } = await supabase.auth.getUser();
+      console.log('Auth callback: got user', user);
+
       const email = user?.email;
       const userId = user?.id;
       const now = new Date().toISOString();
 
-      // Update users table
+      // Create a row in users table
       await supabase
         .from('users')
-        .update({
-          email_verified: true,
+        .upsert({
+          id: userId,
+          email: email,
           updated_at: now,
-          email_verified_at: now,
           onboarding_step: 2,
         })
-        .eq('id', userId);
 
       // Update email_verifications table
       await supabase
@@ -74,8 +76,9 @@ export async function GET(request: Request) {
           used_at: now,
           email: email,
         })
-        .eq('token', token_hash);
-      
+        .eq('email', email);
+        console.log('Auth callback: finished updates');
+
     } catch (error) {
       console.error('Auth callback error:', error)
       // Redirect to error page or back to signup

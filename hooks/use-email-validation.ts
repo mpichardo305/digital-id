@@ -15,8 +15,7 @@ export function useEmailValidation(initial = "") {
   const isValid = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed), [trimmed]);
 
   const domain = trimmed.split("@")[1] ?? "";
-  // const isCorporate = domain !== "" && !FREE_EMAIL.has(domain);
-  const isCorporate = true;
+  const isCorporate = domain !== "" && !FREE_EMAIL.has(domain);
 
   const error = !isValid
     ? "Enter a valid email."

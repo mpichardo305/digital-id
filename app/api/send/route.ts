@@ -77,8 +77,7 @@ export async function POST(req: Request) {
         const { data: verification, error } = await supabase
           .from('email_verifications')
           .insert({
-            email,
-            token: crypto.randomUUID(),
+            email,            
             expires_at: new Date(Date.now() + 3600000).toISOString(), // 1 hour
             used: false,
             ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip'),

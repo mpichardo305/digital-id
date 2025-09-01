@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useEmailValidation } from "@/hooks/use-email-validation";
 import { useRouter } from "next/navigation";
 import { createClient } from '@/utils/supabase/client'
+import { useEffect, localStorage } from "react";
 
 export default function HomePage() {
   const router = useRouter();
@@ -19,49 +20,62 @@ export default function HomePage() {
   const showError = submitted && Boolean(error);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
-
-
   const [emailSent, setEmailSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [emailLimitLabel, setEmailLimitLabel] = useState(false);
+  
+  useEffect(() => {
+    // Only run in the browser
+    if (typeof window !== "undefined") {
+      const lastSent = window.localStorage.getItem(`emailSent:${email}`);
+      if (lastSent && Date.now() - Number(lastSent) < 60 * 1000) {
+        setEmailLimitLabel(true);
+      } else {
+        setEmailLimitLabel(false);
+      }
+    }
+  }, [email]);
+
+  // useEffect to clear the label after 60 seconds
+  useEffect(() => {
+    if (emailLimitLabel) {
+      const timeout = setTimeout(() => {
+        setEmailLimitLabel(false);
+      }, 60 * 1000); // 60 seconds
+
+      // Cleanup on unmount or if label changes
+      return () => clearTimeout(timeout);
+    }
+  }, [emailLimitLabel]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitted(true);
     setFormError(null);
 
+    // Check localStorage for recent submission
+    // When you set the limit (e.g., after submit)
+    const setEmailLimit = () => {
+      setEmailLimitLabel(true);
+      if (typeof window !== "undefined") {
+        localStorage.setItem(`emailSent:${email}`, Date.now().toString());
+      }
+    };
+
     if (!isValid || !isCorporate || submitting) return;
 
     try {
-      // This triggers Supabase Auth which triggers the Auth Hook
-      const { error } = await supabase.auth.signInWithOtp({
-        email: email,
-        options: {
-          // This tells Supabase where to redirect after verification
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding/step-2`,
-          shouldCreateUser: true, // Creates user if doesn't exist
-        }
-      })
-      
-
-      if (error) throw error
-
-      // Success! The Auth Hook will handle sending the custom email
-      setEmailSent(true)
-      alert('Check your email for the verification link!')
-
       // --- Custom Supabase logic for onboarding and email_verifications ---
       // Generate a token_hash (for demo, use crypto.randomUUID())
       const token_hash = crypto.randomUUID();
       const nowNotIso = new Date();
-      const now = now.toISOString();
+      const now = nowNotIso.toISOString();
       const expiresAt = new Date(nowNotIso.getTime() + 60 * 60 * 1000).toISOString();
 
       // 1. Insert into email_verifications
       await supabase
         .from('email_verifications')
         .insert({
-          updated_at: now,
-          token: token_hash,
           email: email,
           expires_at: expiresAt,
           used: false,
@@ -71,13 +85,30 @@ export default function HomePage() {
       // 2. Update users table (set onboarding_step=1, created_at=now)
       await supabase
         .from('users')
-        .update({
+        .insert({
+          email: email,
           onboarding_step: 1,
           created_at: now,
-        })
-        .eq('email', email);
+          onboarding_completed: false,
+          email_verified_at: false,
+
+        });
       // --- End custom logic ---
+      // This triggers Supabase Auth which triggers the Auth Hook
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback?my_token=${token_hash}&next=/onboarding/step-2`,
+          shouldCreateUser: true,
+        }
+      })
       
+      if (error) throw error
+      if (typeof window !== "undefined") {
+        localStorage.setItem(`emailSent:${email}`, Date.now().toString());
+      }
+      // Success! The Auth Hook will handle sending the custom email
+      setEmailSent(true)
     } catch (error) {
       console.error('Error:', error)
       alert('Failed to send verification email')
@@ -594,13 +625,16 @@ export default function HomePage() {
 
                 <Button
                   type="submit"
-                  disabled={submitting}
+                  disabled={submitting || emailLimitLabel}
                   className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors disabled:opacity-60"
                 >
                   {submitting ? "Validating…" : "Validate email"}
                 </Button>
                 {emailSent && (
                   <p>We've sent a verification link to {email}</p>
+                )}
+                {emailLimitLabel && (
+                  <p>You must wait at least 1 minute before resubmitting for {email}</p>
                 )}
               </form>
             </div>

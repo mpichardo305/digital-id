@@ -124,7 +124,7 @@ export default function OnboardingStep2() {
       // Update both users and user_profiles tables
       
       // First update the main users table with onboarding step
-      const { error: userUpdateError } = await supabase
+      const { error: userUpdateError2 } = await supabase
         .from('users')
         .update({
           full_name: fullName,
@@ -134,7 +134,7 @@ export default function OnboardingStep2() {
         })
         .eq('id', user.id);
         
-      if (userUpdateError) throw new Error(`Failed to update user: ${userUpdateError.message}`);
+      if (userUpdateError2) throw new Error(`Failed to update user: ${userUpdateError2.message}`);
       
       // First, check if user exists in public.users
       const { data: publicUser, error: publicUserError } = await supabase
@@ -159,21 +159,6 @@ export default function OnboardingStep2() {
           console.error("Failed to create user:", createUserError);
           throw new Error(`Failed to create user: ${createUserError.message}`);
         }
-        //add email_verifications table
-        const { error: emailVerificationError } = await supabase
-        .from('email_verifications')
-        .insert({
-          email: user.email,
-          token: crypto.randomUUID(),
-          expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toISOString(),
-          used: false,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        });
-      if (emailVerificationError) {
-        console.error("Failed to create email verification:", emailVerificationError);
-        throw new Error(`Failed to create email verification: ${emailVerificationError.message}`);
-      }
       }
 
       // Now proceed with the user_profiles upsert
@@ -196,6 +181,8 @@ export default function OnboardingStep2() {
         .from('users')
         .update({
           onboarding_step: 3,
+          full_name: fullName,
+          onboarding_completed: true,
         })
         .eq('id', user.id);
 
