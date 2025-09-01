@@ -12,16 +12,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 serve(async (req) => {
-  // --- AUTHORIZATION CHECK (must be inside the handler) ---
-  const authz = req.headers.get("authorization") ?? "";
-  if (authz !== `Bearer ${Deno.env.get("SEND_EMAIL_HOOK_SECRET")}`) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
-  // --- END AUTHORIZATION CHECK ---
-
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });

@@ -90,7 +90,6 @@ export default function HomePage() {
           onboarding_step: 1,
           created_at: now,
           onboarding_completed: false,
-          email_verified_at: false,
 
         });
       // --- End custom logic ---
@@ -98,7 +97,7 @@ export default function HomePage() {
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?my_token=${token_hash}&next=/onboarding/step-2`,
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?my_token=${token_hash}&next=/onboarding/step-2`,
           shouldCreateUser: true,
         }
       })
