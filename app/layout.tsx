@@ -24,8 +24,7 @@ const poppins = Poppins({
 const baseUrl = process.env.VERCEL_URL 
   ? `https://${process.env.VERCEL_URL}`
   : process.env.NODE_ENV === 'production'
-    ? 'https://digital-id-app.vercel.app' // Update this to your actual domain
-    : 'http://localhost:3000';
+    ? 'https://trydigitalid.com'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
