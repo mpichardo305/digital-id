@@ -1,18 +1,23 @@
-export const dynamic = "force-static"; // simple static page
+export const runtime = "edge"; 
+export const dynamic = "force-static";
 
-export default function TwitterPlayer() {
+export default function TwitterPlayerPage() {
   return (
-    <html>
-      <body style={{ margin: 0, background: "black" }}>
+    <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Digital ID Video</title>
+      </head>
+      <body style={{ margin: 0, background: "#000", display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
         <video
           src="/dig-id-open-graph.mp4"
-          width={800}
-          height={450}
+          width="800"
+          height="450"
           controls
+          autoPlay
           playsInline
           muted
-          preload="metadata"
-          style={{ display: "block", width: "100%", height: "100%" }}
+          style={{ maxWidth: "100%", height: "auto" }}
         />
       </body>
     </html>

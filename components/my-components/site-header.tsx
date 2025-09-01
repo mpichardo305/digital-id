@@ -43,7 +43,7 @@ export default function SiteHeader() {
     { href: "/#why-use", label: "Why use Digital IDs" },
     { href: "/#benefits", label: "Benefits" },
     { href: "/#signup", label: "Try Digital ID" },
-    { href: "/", label: "Check my status" },
+    { href: "/check-status", label: "Check my status" },
   ];
 
   return (
