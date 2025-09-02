@@ -232,8 +232,8 @@ export default function OnboardingStep2() {
                 </div>
 
                 {/* Horizontal connector line */}
-                <div className="flex items-center -mx-6">
-                  <div className="h-px bg-black w-full mt-4"></div>
+                <div className="flex items-center -mx-6" style={{ position: 'relative', height: '24px' }}>
+                  <div className="h-px bg-black w-full" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}></div>
                 </div>
 
                 {/* Step 2 - Current */}
@@ -249,8 +249,8 @@ export default function OnboardingStep2() {
                 </div>
 
                 {/* Horizontal connector line */}
-                <div className="flex items-center -mx-6">
-                  <div className="h-px bg-gray-300 w-full mt-4"></div>
+                <div className="flex items-center -mx-6" style={{ position: 'relative', height: '24px' }}>
+                  <div className="h-px bg-gray-300 w-full" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}></div>
                 </div>
 
                 {/* Step 3 - Pending */}
@@ -318,7 +318,7 @@ export default function OnboardingStep2() {
                     className="block text-sm font-400"
                     style={{ color: "#625B71" }}
                   >
-                    Upload Photo ID <span className="text-red-500">*</span>
+                    Upload photo of corporate ID <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <input
@@ -350,7 +350,7 @@ export default function OnboardingStep2() {
                       ) : (
                         <div className="flex flex-col items-center space-y-2">
                           <Upload className="w-8 h-8 text-gray-400" />
-                          <span className="text-sm text-gray-500">Click to upload your photo ID</span>
+                          <span className="text-sm text-gray-500">Click to upload your corporate ID</span>
                         </div>
                       )}
                     </label>
@@ -364,7 +364,7 @@ export default function OnboardingStep2() {
                     className="block text-sm font-400"
                     style={{ color: "#625B71" }}
                   >
-                    Upload Selfie <span className="text-red-500">*</span>
+                    Share a selfie <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <input

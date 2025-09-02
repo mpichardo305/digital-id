@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Menu, X, Shield, Zap, Key, Mail, Download, User, Check } from "lucide-react";
+import { Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,6 +11,7 @@ import { useEmailValidation } from "@/hooks/use-email-validation";
 import { useRouter } from "next/navigation";
 import { createClient } from '@/utils/supabase/client'
 import { useEffect } from "react";
+import { useSearchParams } from 'next/navigation';
 
 export default function HomePage() {
   const router = useRouter();
@@ -116,8 +118,22 @@ export default function HomePage() {
     }
   }
 
+  const searchParams = useSearchParams();
+  const errorParam = searchParams.get('error');
+
   return (
     <div className="min-h-screen">
+      {/* Error Message Banner */}
+      {errorParam === 'verification_failed' && (
+        <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center mb-4 z-50">
+          Your verification link has expired or is invalid. Please request a new one.
+        </div>
+      )}
+      {errorParam === 'auth_failed' && (
+        <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center mb-4 z-50">
+          Authentication failed. Please try again.
+        </div>
+      )}
       {/* Header */}
     <section className="hero-section w-full py-10 relative pt-6">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
@@ -194,7 +210,7 @@ export default function HomePage() {
               {/* CTA Button */}
 
               <Button
-                className="bg-black text-white text-base font-medium hover:bg-gray-800 transition-colors shadow-lg w-[184px] h-[52px] rounded-[36px] py-[14px] px-4"
+                className="bg-black text-white text-base font-medium hover:bg-gray-800 transition-colors shadow-lg w-[184px] h-[52px] rounded-[36px] py-[14px] px-4 cursor-pointer"
                 onClick={() =>
                   document
                     .getElementById("signup")
@@ -353,7 +369,12 @@ export default function HomePage() {
         {/* CTA Button */}
         <div className="text-center">
           <Button
-            className="bg-black text-white text-base font-medium hover:bg-gray-800 transition-colors py-6 w-[202px] h-[56px] rounded-[36px] p-4 opacity-100"
+            className="bg-black text-white text-base font-medium hover:bg-gray-800 transition-colors py-6 w-[202px] h-[56px] rounded-[36px] p-4 opacity-100 cursor-pointer"
+            onClick={() =>
+              document
+                .getElementById("signup")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
           >
             Try Digital ID
           </Button>
@@ -477,8 +498,8 @@ export default function HomePage() {
             </div>
 
             {/* Horizontal connector line */}
-            <div className="flex items-center -mx-6">
-              <div className="h-px bg-gray-300 w-full mt-4"></div>
+            <div className="flex items-center -mx-6" style={{ position: 'relative', height: '24px' }}>
+              <div className="h-px bg-gray-300 w-full" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}></div>
             </div>
 
             {/* Step 2 - Current with pulse animation */}
@@ -531,8 +552,8 @@ export default function HomePage() {
             </div>
 
             {/* Horizontal connector line */}
-            <div className="flex items-center -mx-6">
-              <div className="h-px bg-gray-300 w-full mt-4"></div>
+            <div className="flex items-center -mx-6" style={{ position: 'relative', height: '24px' }}>
+              <div className="h-px bg-gray-300 w-full" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}></div>
             </div>
 
             {/* Step 3 - Pending with pulse animation */}
@@ -625,9 +646,15 @@ export default function HomePage() {
                 <Button
                   type="submit"
                   disabled={submitting || emailLimitLabel}
-                  className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors disabled:opacity-60"
+                  className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors disabled:opacity-60 flex items-center justify-center"
                 >
-                  {submitting ? "Validating…" : "Validate email"}
+                  {submitting ? (
+                    <>
+                      <Loader className="animate-spin mr-2" /> Validating…
+                    </>
+                  ) : (
+                    "Validate email"
+                  )}
                 </Button>
                 {emailSent && (
                   <p>We've sent a verification link to {email}</p>

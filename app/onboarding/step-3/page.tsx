@@ -40,8 +40,8 @@ export default function OnboardingStep3() {
                 </div>
 
                 {/* Horizontal connector line */}
-                <div className="flex items-center -mx-6">
-                  <div className="h-px bg-black w-full mt-4"></div>
+                <div className="flex items-center -mx-6" style={{ position: 'relative', height: '24px' }}>
+                  <div className="h-px bg-black w-full" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}></div>
                 </div>
 
                 {/* Step 2 - Completed */}
@@ -55,8 +55,8 @@ export default function OnboardingStep3() {
                 </div>
 
                 {/* Horizontal connector line */}
-                <div className="flex items-center -mx-6">
-                  <div className="h-px bg-black w-full mt-4"></div>
+                <div className="flex items-center -mx-6" style={{ position: 'relative', height: '24px' }}>
+                  <div className="h-px bg-black w-full" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}></div>
                 </div>
 
                 {/* Step 3 - Current */}
