@@ -38,8 +38,7 @@ export default function IncompleteProfileEmail({
           <Section style={{ padding: '0 24px' }}>
             <Section style={styles.card}>
               <Text style={styles.h1}>Complete your Digital ID profile</Text>
-
-              {firstName && <Text style={styles.p}>{firstName},</Text>}
+              {/* {firstName && <Text style={styles.p}>{firstName},</Text>} */}
               <div style={{ paddingTop: 4 }} />
               <Text style={styles.p}>
                 Your profile is almost complete! Please click the button below to finish your onboarding and activate your Digital ID.

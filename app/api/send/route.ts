@@ -75,7 +75,7 @@ export async function POST(req: Request) {
 
     const supabase = await createClient();
     
-    // Handle verification email
+    // Handle verification and complete_profile emails
     let url = '';
     if (templateKey === 'verify') {
       // Generate verification token if not provided
@@ -102,9 +102,18 @@ export async function POST(req: Request) {
         
         token = verification.token;
       }
-      
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `https://${req.headers.get('host')}`;
       url = `${baseUrl}/api/auth/verify?token=${token}&email=${encodeURIComponent(email)}`;
+    } else if (templateKey === 'complete_profile') {
+      // Generate complete profile URL if not provided
+      let token_hash = body.token_hash;
+      if (!token_hash) {
+        // Generate a new token_hash if not provided
+        token_hash = crypto.randomUUID();
+      }
+      const onboardingStep = onboarding_step || 2;
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `https://${req.headers.get('host')}`;
+      url = `${baseUrl}/onboarding/step-${onboardingStep}?token_hash=${token_hash}`;
     }
 
     // Fetch additional user data if needed
