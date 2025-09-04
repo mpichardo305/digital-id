@@ -208,23 +208,8 @@ export default function HomePage() {
     }
   }
 
-  const searchParams = useSearchParams();
-  const errorParam = searchParams.get('error');
-
-
   return (
     <div className="min-h-screen">
-      {/* Error Message Banner */}
-      {errorParam === 'verification_failed'&& (
-        <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center mb-4 z-50">
-          Your verification link has expired or is invalid. Please request a new one.
-        </div>
-      )}
-      {errorParam === 'auth_failed' && (
-        <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center mb-4 z-50">
-          Authentication failed. Please try again.
-        </div>
-      )}
       {/* Header */}
     <section className="hero-section w-full py-10 relative pt-6">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
