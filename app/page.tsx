@@ -674,7 +674,7 @@ export default function HomePage() {
                 <Button
                   type="submit"
                   disabled={submitting || emailLimitLabel}
-                  className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors disabled:opacity-60 flex items-center justify-center"
+                  className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors disabled:opacity-60 flex items-center justify-center cursor-pointer"
                 >
                   {submitting ? (
                     <>

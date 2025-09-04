@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useEmailValidation } from "../../hooks/use-email-validation.ts";
 import { createClient } from "../../utils/supabase/client.ts";
 import { getOnboardingEmailUrl } from '../../lib/utils.ts'; // adjust path if needed
+import { Loader } from "lucide-react";
 
 export default function CheckStatusPage() {
   const { email, isValid, isCorporate, error, submitted, setSubmitted, handleEmailChange } =
@@ -237,9 +238,15 @@ export default function CheckStatusPage() {
           <Button
             type="submit"
             disabled={submitting || emailLimitLabel}
-            className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors disabled:opacity-60 flex items-center justify-center"
+            className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors disabled:opacity-60 flex items-center justify-center cursor-pointer"
           >
-            {submitting ? "Checking..." : "Check status"}
+            {submitting ? (
+              <>
+                <Loader className="animate-spin mr-2" /> Checking...
+              </>
+            ) : (
+              "Check status"
+            )}
           </Button>
         </form>
       </div>
