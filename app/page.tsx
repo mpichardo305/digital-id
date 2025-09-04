@@ -340,7 +340,7 @@ export default function HomePage() {
             <p className="text-xs md:text-sm text-gray-400 font-medium mb-8 md:mb-12 tracking-wider text-left">
               TRUSTED BY
             </p>
-          <div className="flex flex-wrap items-center justify-start gap-10 md:gap-20">
+          <div className="flex flex-wrap items-center justify-start gap-10 md:gap-18 xl:gap-20">
             <div className="flex items-center">
                 <img
                   src="/quicknode-logo.png"
