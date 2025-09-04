@@ -3,15 +3,16 @@ import React from 'react';
 import { Html, Head, Body, Container, Section, Img, Text, Button, Hr, Link } from 'https://esm.sh/@react-email/components@0.0.12';
 import { emailStyles as styles } from "./emailStyles.ts";
 
-
 export default function VerifyEmailAndReturn({
   firstName = 'Michael',
-  url = 'https://trydigitalid.com/verify',
+  url,  
   supportEmail = 'contact@trydigitalid.com',
+  email,
 }: {
   firstName?: string;
   url?: string;
   supportEmail?: string;
+  email?: string;
 }) {
   return (
     <Html>
@@ -69,7 +70,7 @@ export default function VerifyEmailAndReturn({
               </Link>
               <br />
               If you no longer wish to receive emails from Digital ID,{' '}
-              <Link href="https://trydigitalid.com/unsubscribe" style={styles.footerLink}>
+              <Link  href={`https://trydigitalid.com/unsubscribe?email=${encodeURIComponent(email ?? '')}`} style={styles.footerLink}>
                 unsubscribe
               </Link>{' '}here.
             </Text>

@@ -5,12 +5,14 @@ import { emailStyles as styles } from "./emailStyles.ts";
 
 export default function IncompleteProfileEmail({
   firstName = 'Michael',
-  url,
+  url,  
   supportEmail = 'contact@trydigitalid.com',
+  email,
 }: {
   firstName?: string;
   url?: string;
   supportEmail?: string;
+  email?: string;
 }) {
   return (
     <Html>
@@ -67,7 +69,7 @@ export default function IncompleteProfileEmail({
               </Link>
               <br />
               If you no longer wish to receive emails from Digital ID,{' '}
-              <Link href="https://trydigitalid.com/unsubscribe" style={styles.footerLink}>
+              <Link  href={`https://trydigitalid.com/unsubscribe?email=${encodeURIComponent(email ?? '')}`} style={styles.footerLink}>
                 unsubscribe
               </Link>{' '}here.
             </Text>
