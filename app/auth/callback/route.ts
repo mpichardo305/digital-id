@@ -42,9 +42,11 @@ export async function GET(request: Request) {
       })
 
       if (error) {
-        console.error('OTP verification error:', error)
-        // Redirect to error page
-        return NextResponse.redirect(new URL('/?error=verification_failed', request.url))
+        console.error('OTP verification error:', error.message, error.stack)
+        // Redirect to error page with more specific error
+        return NextResponse.redirect(
+          new URL(`/?error=verification_failed&message=${encodeURIComponent(error.message)}`, request.url)
+        )
       }
       
       // Email verified successfully! The session will be established automatically

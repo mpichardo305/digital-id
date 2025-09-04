@@ -80,19 +80,31 @@ export default function HomePage() {
        console.log('onboarding_step:', userData.onboarding_step);
 
        if (userData.onboarding_step === 2) {
-         // Send incomplete profile email
-         await fetch('/api/send', {
-           method: 'POST',
-           headers: { 'Content-Type': 'application/json' },
-           body: JSON.stringify({
-             template: 'incomplete_profile',
-             email: email,
-             onboarding_step: userData.onboarding_step,
-           }),
-         });
-         setSubmitting(false);
-         return;
-       }
+        // Generate the token and URL for completing the profile
+        const token_hash = crypto.randomUUID();
+        
+        // Use the utility to get the correct URL for completing profile
+        const { url, type } = getOnboardingEmailUrl({
+          onboarding_step: userData.onboarding_step,
+          token_hash,
+          appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "",
+        });
+        
+        // Send complete profile email with the generated URL
+        await fetch('/api/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            template: 'complete_profile',
+            email: email,
+            onboarding_step: userData.onboarding_step,
+            url: url,
+            token_hash: token_hash,
+          }),
+        });
+        setSubmitting(false);
+        return;
+        }
 
        if (userData.onboarding_step === 1) {
          // Re-trigger the magic link flow (send a new verification email)
@@ -114,7 +126,7 @@ export default function HomePage() {
          const { url } = getOnboardingEmailUrl({
            onboarding_step: userData.onboarding_step,
            token_hash,
-           appUrl: process.env.NEXT_PUBLIC_APP_URL
+           appUrl: process.env.NEXT_PUBLIC_APP_URL ?? ""
          });
 
          // Send the magic link
@@ -171,7 +183,7 @@ export default function HomePage() {
       const { url } = getOnboardingEmailUrl({
         onboarding_step: 1,
         token_hash,
-        appUrl: process.env.NEXT_PUBLIC_APP_URL
+        appUrl: process.env.NEXT_PUBLIC_APP_URL ?? ""
       });
       const { error } = await supabase.auth.signInWithOtp({
         email: email,

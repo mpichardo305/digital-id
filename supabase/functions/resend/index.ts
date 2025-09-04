@@ -1,13 +1,20 @@
+// @ts-ignore
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+// @ts-ignore
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import VerifyEmailAndReturn from '../../../components/email/verify-email-and-return.tsx';
-import IncompleteProfileEmail from '../../../components/email/incomplete-profile.tsx';
-import { getOnboardingEmailUrl } from '../../../lib/utils.ts';
+// @ts-ignore
+import { render } from "https://esm.sh/@react-email/render@0.0.12";
+// @ts-ignore
+import VerifyEmailAndReturn from "../../../components/email/verify-email-and-return.tsx";
+// @ts-ignore
+import IncompleteProfileEmail from "../../../components/email/incomplete-profile.tsx";
+// @ts-ignore
+import { getOnboardingEmailUrl } from "../../../lib/utils.ts";
 // Environment variables
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-const APP_URL = Deno.env.get("NEXT_PUBLIC_APP_URL") ?? "http://trydigitalid.com";
+const RESEND_API_KEY = (globalThis as any).Deno?.env?.get("RESEND_API_KEY") ?? "";
+const SUPABASE_URL = (globalThis as any).Deno?.env?.get("SUPABASE_URL") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = (globalThis as any).Deno?.env?.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const APP_URL = (globalThis as any).Deno?.env?.get("NEXT_PUBLIC_APP_URL") ?? "http://trydigitalid.com";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -37,19 +44,21 @@ serve(async (req) => {
 
       let emailHtml;
       if (type === "complete_profile") {
-        emailHtml = IncompleteProfileEmail({
+        emailHtml = await render(IncompleteProfileEmail({
           firstName: user.firstName,
           url,
           supportEmail: "contact@trydigitalid.com",
-        });
+        }));
       } else {
         // Default to verify
-        emailHtml = VerifyEmailAndReturn({
+        emailHtml = await render(VerifyEmailAndReturn({
           firstName: user.firstName,
           url,
           supportEmail: "contact@trydigitalid.com",
-        });
+        }));
       }
+      console.log("emailHtml type:", typeof emailHtml);
+      console.log("emailHtml value:", emailHtml);
 
       // Send email directly using Resend API with fetch
       try {
@@ -95,7 +104,7 @@ serve(async (req) => {
               template: type,
               sent_to: user.email,
               sent_at: new Date().toISOString(),
-              resend_id: data.id,
+              resend_id: (data as any).id,
             });
         } catch (logError) {
           // Don't fail if we can't log the email

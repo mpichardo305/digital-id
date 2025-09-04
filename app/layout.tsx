@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Inter, Poppins } from "next/font/google"
 import "./globals.css"
 import SiteHeader from "@/components/my-components/site-header"
@@ -58,19 +58,23 @@ export const metadata: Metadata = {
     title: "Digital ID",
     description: "Your home for digitizing your workforce access control keys",
     images: [`${baseUrl}/cornerstone-dig-transf.png`], 
-    player: {                                         
-      url: `${baseUrl}/twitter-player`,
+    players: [{                                         
+      playerUrl: `${baseUrl}/twitter-player`,
+      streamUrl: `${baseUrl}/twitter-player`,
       width: 800,
       height: 450,
-    },
+    }],
   },
-  themeColor: "#000000",                             // ✅ mobile tint
   robots: { index: true, follow: true },             // ✅ explicit
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
+}
+
+export const viewport: Viewport = {
+  themeColor: "#000000",                             // ✅ mobile tint
 }
 
 export default function RootLayout({
