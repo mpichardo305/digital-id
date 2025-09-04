@@ -132,7 +132,7 @@ export async function POST(req: Request) {
 
     // Send email via Resend
     const { data, error } = await resend.emails.send({
-      from: 'Digital ID <onboarding@trydigitalid.com>',
+      from: 'Digital ID <onboarding@updates.trydigitalid.com>',
       to: [email],
       subject: entry.subject,
       react: entry.component(emailProps),

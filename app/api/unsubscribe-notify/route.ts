@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     }
 
     const { error } = await resend.emails.send({
-      from: 'Digital ID <onboarding@trydigitalid.com>',
+      from: 'Digital ID <onboarding@updates.trydigitalid.com>',
       to: ['mp@accessgrid.com'],
       subject: '${email} has Unsubscribed',
       text: `The following user has unsubscribed: ${email}`,
