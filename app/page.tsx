@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Menu, X, Shield, Zap, Key, Mail, Download, User, Check } from "lucide-react";
+import { Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,6 +11,10 @@ import { useEmailValidation } from "@/hooks/use-email-validation";
 import { useRouter } from "next/navigation";
 import { createClient } from '@/utils/supabase/client'
 import { useEffect } from "react";
+import { useSearchParams } from 'next/navigation';
+import { getOnboardingEmailUrl } from '@/lib/utils';
+import '@/styles/globals.css';
+
 
 export default function HomePage() {
   const router = useRouter();
@@ -65,7 +70,89 @@ export default function HomePage() {
     if (!isValid || !isCorporate || submitting) return;
 
     try {
-      // --- Custom Supabase logic for onboarding and email_verifications ---
+       // Check if email exists in users table
+       const { data: userData, error: userError } = await supabase
+       .from('users')
+       .select('onboarding_step')
+       .eq('email', email)
+       .single();
+
+     if (userData) {
+       console.log('onboarding_step:', userData.onboarding_step);
+
+       if (userData.onboarding_step === 2) {
+        // Generate the token and URL for completing the profile
+        const token_hash = crypto.randomUUID();
+        
+        // Use the utility to get the correct URL for completing profile
+        const { url, type } = getOnboardingEmailUrl({
+          onboarding_step: userData.onboarding_step,
+          token_hash,
+          appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "",
+        });
+        
+        // Send complete profile email with the generated URL
+        await fetch('/api/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            template: 'complete_profile',
+            email: email,
+            onboarding_step: userData.onboarding_step,
+            url: url,
+            token_hash: token_hash,
+          }),
+        });
+        setSubmitting(false);
+        return;
+        }
+
+       if (userData.onboarding_step === 1) {
+         // Re-trigger the magic link flow (send a new verification email)
+         const token_hash = crypto.randomUUID();
+         const nowNotIso = new Date();
+         const now = nowNotIso.toISOString();
+         const expiresAt = new Date(nowNotIso.getTime() + 60 * 60 * 1000).toISOString();
+
+         // Insert a new verification record
+         await supabase
+           .from('email_verifications')
+           .insert({
+             email: email,
+             expires_at: expiresAt,
+             used: false,
+             created_at: now,
+           });
+
+         const { url } = getOnboardingEmailUrl({
+           onboarding_step: userData.onboarding_step,
+           token_hash,
+           appUrl: process.env.NEXT_PUBLIC_APP_URL ?? ""
+         });
+
+         // Send the magic link
+         const { error } = await supabase.auth.signInWithOtp({
+           email: email,
+           options: {
+             emailRedirectTo: url,
+             shouldCreateUser: false, // user already exists
+           }
+         });
+
+         if (error) throw error;
+         if (typeof window !== "undefined") {
+           localStorage.setItem(`emailSent:${email}`, Date.now().toString());
+         }
+         setEmailSent(true);
+         setSubmitting(false);
+         return;
+       }
+
+       setSubmitting(false);
+       return;
+     }
+
+     // --- Custom Supabase logic for onboarding and email_verifications for new users ---
       // Generate a token_hash (for demo, use crypto.randomUUID())
       const token_hash = crypto.randomUUID();
       const nowNotIso = new Date();
@@ -94,10 +181,15 @@ export default function HomePage() {
         });
       // --- End custom logic ---
       // This triggers Supabase Auth which triggers the Auth Hook
+      const { url } = getOnboardingEmailUrl({
+        onboarding_step: 1,
+        token_hash,
+        appUrl: process.env.NEXT_PUBLIC_APP_URL ?? ""
+      });
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?my_token=${token_hash}&next=/onboarding/step-2`,
+          emailRedirectTo: url,
           shouldCreateUser: true,
         }
       })
@@ -194,7 +286,7 @@ export default function HomePage() {
               {/* CTA Button */}
 
               <Button
-                className="bg-black text-white text-base font-medium hover:bg-gray-800 transition-colors shadow-lg w-[184px] h-[52px] rounded-[36px] py-[14px] px-4"
+                className="bg-black text-white text-base font-medium hover:bg-gray-800 transition-colors shadow-lg w-[184px] h-[52px] rounded-[36px] py-[14px] px-4 cursor-pointer"
                 onClick={() =>
                   document
                     .getElementById("signup")
@@ -235,7 +327,7 @@ export default function HomePage() {
             <p className="text-xs md:text-sm text-gray-400 font-medium mb-8 md:mb-12 tracking-wider text-left">
               TRUSTED BY
             </p>
-          <div className="flex flex-wrap items-center justify-start gap-10 md:gap-20">
+          <div className="flex flex-wrap items-center justify-start gap-10 md:gap-18 xl:gap-20">
             <div className="flex items-center">
                 <img
                   src="/quicknode-logo.png"
@@ -353,7 +445,12 @@ export default function HomePage() {
         {/* CTA Button */}
         <div className="text-center">
           <Button
-            className="bg-black text-white text-base font-medium hover:bg-gray-800 transition-colors py-6 w-[202px] h-[56px] rounded-[36px] p-4 opacity-100"
+            className="bg-black text-white text-base font-medium hover:bg-gray-800 transition-colors py-6 w-[202px] h-[56px] rounded-[36px] p-4 opacity-100 cursor-pointer"
+            onClick={() =>
+              document
+                .getElementById("signup")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
           >
             Try Digital ID
           </Button>
@@ -477,8 +574,8 @@ export default function HomePage() {
             </div>
 
             {/* Horizontal connector line */}
-            <div className="flex items-center -mx-6">
-              <div className="h-px bg-gray-300 w-full mt-4"></div>
+            <div className="flex items-center -mx-6" style={{ position: 'relative', height: '24px' }}>
+              <div className="h-px bg-gray-300 w-full" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}></div>
             </div>
 
             {/* Step 2 - Current with pulse animation */}
@@ -488,41 +585,17 @@ export default function HomePage() {
                 <div className="w-6 h-6 bg-white border border-black rounded-full z-20 relative flex items-center justify-center">
                   <div className="w-1 h-1 bg-black rounded-full"></div>
                   {/* Pulse rings - expanding from black center */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgb(37, 99, 235) 0%, rgb(96, 165, 250) 100%)",
-                      animation:
-                        "pulseRing2-1 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                    }}
-                  ></div>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgb(96, 165, 250) 0%, rgb(147, 197, 253) 100%)",
-                      animation:
-                        "pulseRing2-2 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                      animationDelay: "0.5s",
-                    }}
-                  ></div>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgb(147, 197, 253) 0%, rgb(219, 234, 254) 100%)",
-                      animation:
-                        "pulseRing2-3 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                      animationDelay: "1s",
-                    }}
-                  ></div>
-                </div>
+                  <div style={{
+                      position: 'absolute',
+                      width: '24px',
+                      height: '24px',
+                      border: '2px solid rgb(96, 165, 250)',
+                      borderRadius: '50%',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      animation: 'pulsate 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    }}></div>
                 </div>
               </div>
               <div className="text-[10px] font-medium text-[#6F6F6F] text-center whitespace-nowrap">
@@ -531,8 +604,8 @@ export default function HomePage() {
             </div>
 
             {/* Horizontal connector line */}
-            <div className="flex items-center -mx-6">
-              <div className="h-px bg-gray-300 w-full mt-4"></div>
+            <div className="flex items-center -mx-6" style={{ position: 'relative', height: '24px' }}>
+              <div className="h-px bg-gray-300 w-full" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}></div>
             </div>
 
             {/* Step 3 - Pending with pulse animation */}
@@ -542,41 +615,17 @@ export default function HomePage() {
                 <div className="w-6 h-6 bg-white border border-black rounded-full z-20 relative flex items-center justify-center">
                   <div className="w-1 h-1 bg-black rounded-full"></div>
                   {/* Pulse rings - expanding from black center */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgb(37, 99, 235) 0%, rgb(96, 165, 250) 100%)",
-                      animation:
-                        "pulseRing3-1 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                    }}
-                  ></div>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgb(96, 165, 250) 0%, rgb(147, 197, 253) 100%)",
-                      animation:
-                        "pulseRing3-2 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                      animationDelay: "0.5s",
-                    }}
-                  ></div>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgb(147, 197, 253) 0%, rgb(219, 234, 254) 100%)",
-                      animation:
-                        "pulseRing3-3 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                      animationDelay: "1s",
-                    }}
-                  ></div>
-                </div>
+                  <div style={{
+                      position: 'absolute',
+                      width: '24px',
+                      height: '24px',
+                      border: '2px solid rgb(96, 165, 250)',
+                      borderRadius: '50%',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      animation: 'pulsate 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    }}></div>
                 </div>  
               </div>
               <div className="text-[10px] font-medium text-[#6F6F6F] text-center min-h-[1rem] whitespace-nowrap">
@@ -625,9 +674,15 @@ export default function HomePage() {
                 <Button
                   type="submit"
                   disabled={submitting || emailLimitLabel}
-                  className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors disabled:opacity-60"
+                  className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors disabled:opacity-60 flex items-center justify-center"
                 >
-                  {submitting ? "Validating…" : "Validate email"}
+                  {submitting ? (
+                    <>
+                      <Loader className="animate-spin mr-2" /> Validating…
+                    </>
+                  ) : (
+                    "Validate email"
+                  )}
                 </Button>
                 {emailSent && (
                   <p>We've sent a verification link to {email}</p>

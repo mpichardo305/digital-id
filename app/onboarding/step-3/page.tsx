@@ -40,8 +40,8 @@ export default function OnboardingStep3() {
                 </div>
 
                 {/* Horizontal connector line */}
-                <div className="flex items-center -mx-6">
-                  <div className="h-px bg-black w-full mt-4"></div>
+                <div className="flex items-center -mx-6" style={{ position: 'relative', height: '24px' }}>
+                  <div className="h-px bg-black w-full" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}></div>
                 </div>
 
                 {/* Step 2 - Completed */}
@@ -55,8 +55,8 @@ export default function OnboardingStep3() {
                 </div>
 
                 {/* Horizontal connector line */}
-                <div className="flex items-center -mx-6">
-                  <div className="h-px bg-black w-full mt-4"></div>
+                <div className="flex items-center -mx-6" style={{ position: 'relative', height: '24px' }}>
+                  <div className="h-px bg-black w-full" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}></div>
                 </div>
 
                 {/* Step 3 - Current */}
@@ -78,9 +78,9 @@ export default function OnboardingStep3() {
                     </p>
                 </div>
                 <div className="flex items-center justify-center space-x-3 my-4 mt-20 mb-40">                
-                  <div className="w-3 h-3 bg-black rounded-full"></div>
-                  <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                  <div className="w-3 h-3 bg-purple-300 rounded-full"></div>
+                  <div className="w-3 h-3 bg-black rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+                  <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-3 h-3 bg-purple-300 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                 </div>
                 {/* <Button
                   onClick={() => window.location.href = "/thank-you"}

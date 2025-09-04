@@ -42,9 +42,11 @@ export async function GET(request: Request) {
       })
 
       if (error) {
-        console.error('OTP verification error:', error)
-        // Redirect to error page
-        return NextResponse.redirect(new URL('/?error=verification_failed', request.url))
+        console.error('OTP verification error:', error.message, error.stack)
+        // Redirect to error page with more specific error
+        return NextResponse.redirect(
+          new URL(`/auth/verification-failed&message=${encodeURIComponent(error.message)}`, request.url)
+        )
       }
       
       // Email verified successfully! The session will be established automatically
@@ -80,9 +82,17 @@ export async function GET(request: Request) {
         console.log('Auth callback: finished updates');
 
     } catch (error) {
-      console.error('Auth callback error:', error)
-      // Redirect to error page or back to signup
-      return NextResponse.redirect(new URL('/?error=auth_failed', request.url))
+      console.error('Auth callback error:', error);
+      // Redirect to error page and back to signup
+      let message = 'Unknown error';
+      if (error instanceof Error) {
+        message = error.message;
+      } else if (typeof error === 'string') {
+        message = error;
+      }
+      return NextResponse.redirect(
+        new URL(`/auth/auth_failed&message=${encodeURIComponent(message)}`, request.url)
+      );
     }
   }
 

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Check, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createClient } from '@/utils/supabase/client';
+import '@/styles/globals.css';
 
 export default function OnboardingStep2() {
   const router = useRouter();
@@ -87,8 +88,13 @@ export default function OnboardingStep2() {
             
           photoIdUrl = urlData?.signedUrl || filePath;
         } catch (error) {
-          console.error("Photo ID upload error:", error);
-          throw new Error(`Failed to upload photo ID: ${error.message}`);
+          if (error instanceof Error) {
+            console.error("Photo ID upload error:", error);
+            throw new Error(`Failed to upload photo ID: ${error.message}`);
+          } else {
+            console.error("Photo ID upload error:", error);
+            throw new Error("Failed to upload photo ID: Unknown error");
+          }
         }
       }
 
@@ -116,8 +122,13 @@ export default function OnboardingStep2() {
             
           selfieUrl = urlData?.signedUrl || filePath;
         } catch (error) {
-          console.error("Selfie upload error:", error);
-          throw new Error(`Failed to upload selfie: ${error.message}`);
+          if (error instanceof Error) {
+            console.error("Selfie upload error:", error);
+            throw new Error(`Failed to upload selfie: ${error.message}`);
+          } else {
+            console.error("Selfie upload error:", error);
+            throw new Error("Failed to upload selfie: Unknown error");
+          }
         }
       }
 
@@ -232,8 +243,8 @@ export default function OnboardingStep2() {
                 </div>
 
                 {/* Horizontal connector line */}
-                <div className="flex items-center -mx-6">
-                  <div className="h-px bg-black w-full mt-4"></div>
+                <div className="flex items-center -mx-6" style={{ position: 'relative', height: '24px' }}>
+                  <div className="h-px bg-black w-full" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}></div>
                 </div>
 
                 {/* Step 2 - Current */}
@@ -249,8 +260,8 @@ export default function OnboardingStep2() {
                 </div>
 
                 {/* Horizontal connector line */}
-                <div className="flex items-center -mx-6">
-                  <div className="h-px bg-gray-300 w-full mt-4"></div>
+                <div className="flex items-center -mx-6" style={{ position: 'relative', height: '24px' }}>
+                  <div className="h-px bg-gray-300 w-full" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}></div>
                 </div>
 
                 {/* Step 3 - Pending */}
@@ -258,6 +269,17 @@ export default function OnboardingStep2() {
                   <div className="relative flex items-center justify-center">
                     <div className="w-6 h-6 bg-white border border-black rounded-full z-20 relative flex items-center justify-center">
                       <div className="w-1 h-1 bg-black rounded-full"></div>
+                      <div style={{
+                      position: 'absolute',
+                      width: '24px',
+                      height: '24px',
+                      border: '2px solid rgb(96, 165, 250)',
+                      borderRadius: '50%',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      animation: 'pulsate 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    }}></div>
                     </div>
                   </div>
                   <div className="text-[10px] font-medium text-[#6F6F6F] text-center min-h-[1rem] whitespace-nowrap">
@@ -318,7 +340,7 @@ export default function OnboardingStep2() {
                     className="block text-sm font-400"
                     style={{ color: "#625B71" }}
                   >
-                    Upload Photo ID <span className="text-red-500">*</span>
+                    Upload photo of corporate ID <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <input
@@ -350,7 +372,7 @@ export default function OnboardingStep2() {
                       ) : (
                         <div className="flex flex-col items-center space-y-2">
                           <Upload className="w-8 h-8 text-gray-400" />
-                          <span className="text-sm text-gray-500">Click to upload your photo ID</span>
+                          <span className="text-sm text-gray-500">Click to upload your corporate ID</span>
                         </div>
                       )}
                     </label>
@@ -364,7 +386,7 @@ export default function OnboardingStep2() {
                     className="block text-sm font-400"
                     style={{ color: "#625B71" }}
                   >
-                    Upload Selfie <span className="text-red-500">*</span>
+                    Share a selfie <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <input

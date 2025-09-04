@@ -7,6 +7,8 @@ const redirects: Record<string, string> = {
   '/onboarding/congrats': '/onboarding/step-3',
   '/signup': '/#signup',
   '/login': '/#signup',
+  '/step-2': '/onboarding/step-2',
+  '/step-3': '/onboarding/step-3',
   // Add more redirects here as needed
   // '/path-to-redirect-from': '/path-to-redirect-to',
 };
@@ -36,6 +38,10 @@ export const config = {
     '/signup/',
     '/login',
     '/login/',
+    '/step-2',
+    '/step-2/',
+    '/step-3',
+    '/step-3/',
     // Add more paths as needed, or use patterns like:
     // '/prefix/:path*',
   ],

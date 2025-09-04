@@ -1,89 +1,79 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { getOnboardingEmailUrl } from '../../../lib/utils.ts';
+import { createClient } from '../../../utils/supabase/server.ts';
+import process from "node:process"; // or your supabase server util
 
-export async function GET(request: Request) {
-  try {
-    const supabase = await createClient();
-    
-    // Get the current user's session
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    
-    if (sessionError) {
-      console.error('Session error:', sessionError);
-      return NextResponse.json({ 
-        error: 'Authentication error', 
-        redirectTo: '/#signup' 
-      }, { status: 401 });
-    }
-    
-    if (!session?.user) {
-      console.log('No active session found');
-      return NextResponse.json({ 
-        message: 'Not authenticated', 
-        redirectTo: '/#signup' 
-      }, { status: 200 });
-    }
-    
-    // Get the user's onboarding status
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('id, email, onboarding_step, onboarding_completed')
-      .eq('id', session.user.id)
-      .single();
-    
-    if (userError) {
-      console.error('Error fetching user data:', userError);
-      return NextResponse.json({ 
-        error: 'Failed to fetch user data', 
-        redirectTo: '/#signup' 
-      }, { status: 500 });
-    }
-    
-    if (!userData) {
-      console.log('User not found in database');
-      return NextResponse.json({ 
-        message: 'User not found', 
-        redirectTo: '/onboarding/step-2' 
-      }, { status: 200 });
-    }
-    
-    // Determine redirect based on onboarding step
-    let redirectTo = '';
-    
-    if (userData.onboarding_completed) {
-      redirectTo = '/';
-    } else {
-      switch (userData.onboarding_step) {
-        case 0:
-        case 1:
-          redirectTo = '/onboarding/step-2';
-          break;
-        case 2:
-          redirectTo = '/onboarding/step-3';
-          break;
-        case 3:
-          redirectTo = '/onboarding/step-3';
-          break;
-        default:
-          redirectTo = '/onboarding/step-2';
-      }
-    }
-    
-    return NextResponse.json({ 
-      message: 'Status checked successfully', 
-      userData: {
-        email: userData.email,
-        onboardingStep: userData.onboarding_step,
-        onboardingCompleted: userData.onboarding_completed
-      }, 
-      redirectTo 
-    }, { status: 200 });
-    
-  } catch (error) {
-    console.error('Unexpected error:', error);
-    return NextResponse.json({ 
-      error: 'Internal server error', 
-      redirectTo: '/#signup' 
+export async function POST(req: Request) {
+  const supabase = await createClient();
+  const { email } = await req.json();
+
+  // 1. Check if user exists by email
+  const { data: userData, error: userError } = await supabase
+    .from('users')
+    .select('id, email, onboarding_step')
+    .eq('email', email)
+    .maybeSingle();
+
+  // 2. Handle DB error
+  if (userError) {
+    console.error('Error fetching user data:', userError);
+    return NextResponse.json({
+      error: 'Failed to fetch user data',
+      redirectTo: '/#signup'
     }, { status: 500 });
   }
+
+  // 3. If user does not exist, mimic home page signup flow
+  if (!userData) {
+    const token_hash = crypto.randomUUID();
+    const now = new Date().toISOString();
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+
+    // Insert into email_verifications
+    await supabase
+      .from('email_verifications')
+      .insert({
+        email,
+        token_hash,
+        expires_at: expiresAt,
+        used: false,
+        created_at: now,
+      });
+
+    // Insert into users table
+    await supabase
+      .from('users')
+      .insert({
+        email,
+        onboarding_step: 1,
+        created_at: now,
+      });
+
+    // Generate the verification URL
+    const { url: redirectTo } = getOnboardingEmailUrl({
+      onboarding_step: 1,
+      token_hash,
+      appUrl: process.env.NEXT_PUBLIC_APP_URL,
+    });
+
+    return NextResponse.json({
+      message: 'User not found, verification required',
+      redirectTo,
+    }, { status: 200 });
+  }
+
+  // 4. User exists, handle accordingly (e.g., return onboarding status or next step)
+  // You can use getOnboardingEmailUrl here as well if you want to redirect existing users
+  const token_hash = crypto.randomUUID();
+  const { url: redirectTo } = getOnboardingEmailUrl({
+    onboarding_step: userData.onboarding_step,
+    token_hash,
+    appUrl: process.env.NEXT_PUBLIC_APP_URL,
+  });
+
+  return NextResponse.json({
+    message: 'User found',
+    redirectTo,
+    onboarding_step: userData.onboarding_step,
+  }, { status: 200 });
 }
