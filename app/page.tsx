@@ -13,6 +13,7 @@ import { createClient } from '@/utils/supabase/client'
 import { useEffect } from "react";
 import { useSearchParams } from 'next/navigation';
 import { getOnboardingEmailUrl } from '@/lib/utils';
+import '@/styles/globals.css';
 
 
 export default function HomePage() {
@@ -210,10 +211,11 @@ export default function HomePage() {
   const searchParams = useSearchParams();
   const errorParam = searchParams.get('error');
 
+
   return (
     <div className="min-h-screen">
       {/* Error Message Banner */}
-      {errorParam === 'verification_failed' && (
+      {errorParam === 'verification_failed'&& (
         <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center mb-4 z-50">
           Your verification link has expired or is invalid. Please request a new one.
         </div>
@@ -598,41 +600,17 @@ export default function HomePage() {
                 <div className="w-6 h-6 bg-white border border-black rounded-full z-20 relative flex items-center justify-center">
                   <div className="w-1 h-1 bg-black rounded-full"></div>
                   {/* Pulse rings - expanding from black center */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgb(37, 99, 235) 0%, rgb(96, 165, 250) 100%)",
-                      animation:
-                        "pulseRing2-1 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                    }}
-                  ></div>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgb(96, 165, 250) 0%, rgb(147, 197, 253) 100%)",
-                      animation:
-                        "pulseRing2-2 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                      animationDelay: "0.5s",
-                    }}
-                  ></div>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgb(147, 197, 253) 0%, rgb(219, 234, 254) 100%)",
-                      animation:
-                        "pulseRing2-3 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                      animationDelay: "1s",
-                    }}
-                  ></div>
-                </div>
+                  <div style={{
+                      position: 'absolute',
+                      width: '24px',
+                      height: '24px',
+                      border: '2px solid rgb(96, 165, 250)',
+                      borderRadius: '50%',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      animation: 'pulsate 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    }}></div>
                 </div>
               </div>
               <div className="text-[10px] font-medium text-[#6F6F6F] text-center whitespace-nowrap">
@@ -652,41 +630,17 @@ export default function HomePage() {
                 <div className="w-6 h-6 bg-white border border-black rounded-full z-20 relative flex items-center justify-center">
                   <div className="w-1 h-1 bg-black rounded-full"></div>
                   {/* Pulse rings - expanding from black center */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgb(37, 99, 235) 0%, rgb(96, 165, 250) 100%)",
-                      animation:
-                        "pulseRing3-1 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                    }}
-                  ></div>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgb(96, 165, 250) 0%, rgb(147, 197, 253) 100%)",
-                      animation:
-                        "pulseRing3-2 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                      animationDelay: "0.5s",
-                    }}
-                  ></div>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div
-                    className="absolute rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgb(147, 197, 253) 0%, rgb(219, 234, 254) 100%)",
-                      animation:
-                        "pulseRing3-3 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                      animationDelay: "1s",
-                    }}
-                  ></div>
-                </div>
+                  <div style={{
+                      position: 'absolute',
+                      width: '24px',
+                      height: '24px',
+                      border: '2px solid rgb(96, 165, 250)',
+                      borderRadius: '50%',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      animation: 'pulsate 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    }}></div>
                 </div>  
               </div>
               <div className="text-[10px] font-medium text-[#6F6F6F] text-center min-h-[1rem] whitespace-nowrap">
