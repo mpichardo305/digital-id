@@ -103,6 +103,7 @@ export default function HomePage() {
             token_hash: token_hash,
           }),
         });
+        setEmailSent(true);
         setSubmitting(false);
         return;
         }

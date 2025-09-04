@@ -121,7 +121,7 @@ export async function POST(req: Request) {
 
     // Prepare props for email component
     const emailProps: EmailTemplateProps = {
-      firstName: userFirstName || 'there',
+      firstName: userFirstName,
       email,
       url,
       digitalId,
