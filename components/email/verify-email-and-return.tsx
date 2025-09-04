@@ -1,6 +1,6 @@
 import React from 'react';
 // @ts-ignore
-import { Html, Head, Body, Container, Section, Img, Text, Button, Hr, Link } from 'https://esm.sh/@react-email/components@0.0.12';
+import { Html, Head, Body, Container, Section, Img, Text, Button, Hr, Link } from "@react-email/components";
 import { emailStyles as styles } from "./emailStyles.ts";
 
 export default function VerifyEmailAndReturn({
