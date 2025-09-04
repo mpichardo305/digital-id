@@ -88,6 +88,7 @@ export default function CheckStatusPage() {
               token_hash: token_hash,
             }),
           });
+          setEmailSent(true);
           setSubmitting(false);
           return;
         }
@@ -133,7 +134,7 @@ export default function CheckStatusPage() {
           setSubmitting(false);
           return;
         }
-
+        setEmailSent(true);
         setSubmitting(false);
         return;
       }
