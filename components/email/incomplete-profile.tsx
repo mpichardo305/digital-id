@@ -1,8 +1,7 @@
 import { Html, Head, Body, Container, Section, Img, Text, Button, Hr, Link } from '@react-email/components';
 import { emailStyles as styles } from "./emailStyles.ts";
 
-
-export default function VerifyEmailAndReturn({
+export default function IncompleteProfileEmail({
   firstName = 'Michael',
   url = 'https://trydigitalid.com/verify',
   supportEmail = 'contact@trydigitalid.com',
@@ -34,25 +33,24 @@ export default function VerifyEmailAndReturn({
           {/* Card */}
           <Section style={{ padding: '0 24px' }}>
             <Section style={styles.card}>
-              <Text style={styles.h1}>Verify your Digital ID email</Text>
+              <Text style={styles.h1}>Complete your Digital ID profile</Text>
 
               <Text style={styles.p}>{firstName},</Text>
               <div style={{ paddingTop: 4 }} />
               <Text style={styles.p}>
-                This is to confirm your identity and complete the verification process for your account.
-                Please click the button below to verify your email:
+                Your profile is almost complete! Please click the button below to finish your onboarding and activate your Digital ID.
               </Text>
 
               <div style={{ paddingTop: 24 }}>
                 <Button href={url} style={styles.cta}>
-                  Verify email and return to form
+                  Complete your profile
                 </Button>
               </div>
 
               <div style={{ paddingTop: 24 }} />
               <Text style={styles.p}>
-                If you did not initiate this verification or have any concerns, please contact our support team
-                immediately at <Link href={`mailto:${supportEmail}`} style={styles.footerLink}>{supportEmail}</Link>.
+                If you have any questions or need help, please contact our support team at{' '}
+                <Link href={`mailto:${supportEmail}`} style={styles.footerLink}>{supportEmail}</Link>.
               </Text>
             </Section>
           </Section>
@@ -63,7 +61,7 @@ export default function VerifyEmailAndReturn({
             <Text style={styles.footerText}>
               Have questions or concerns? Reach out to us at{' '}
               <Link href="mailto:contact@trydigitalid.com" style={styles.footerLink}>
-                contact@trydigitalid.com
+                xxx@email.com
               </Link>
               <br />
               If you no longer wish to receive emails from Digital ID,{' '}

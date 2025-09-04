@@ -1,20 +1,23 @@
 // app/api/send/route.ts
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
-import WelcomeEmail from '@/components/email/welcome-email';
-import VerifyEmailAndReturn from '@/components/email/verify-email-and-return';
+import { createClient } from '../../../utils/supabase/server';
+import WelcomeEmail from '../../../components/email/welcome-email';
+import IncompleteProfileEmail from '../../../components/email/incomplete-profile';
+import VerifyEmailAndReturn from '../../../components/email/verify-email-and-return'
 import type { ReactElement } from 'react';
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
-type TemplateKey = 'welcome' | 'verify' | 'digital_id_validated' | 'profile_complete';
+type TemplateKey = 'welcome' | 'verify' | 'digital_id_validated' | 'profile_completed' | 'complete_profile';
 
 interface EmailTemplateProps {
   firstName?: string;
   email?: string;
-  verificationUrl?: string;
+  url?: string;
   digitalId?: string;
+  onboarding_step?: string;
+  completeProfileUrl?: string;
 }
 
 const templates: Record<TemplateKey, { 
@@ -33,9 +36,13 @@ const templates: Record<TemplateKey, {
     subject: 'Your Digital ID has been verified',
     component: WelcomeEmail as any, // You might want to create a specific component for this
   },
-  profile_complete: {
+  profile_completed: {
     subject: 'Your Digital ID profile is complete!',
     component: WelcomeEmail as any, // You might want to create a specific component for this
+  },
+  complete_profile: {
+    subject: 'Your Digital ID profile is incomplete!',
+    component: IncompleteProfileEmail as any, // You might want to create a specific component for this
   },
 };
 
@@ -49,6 +56,8 @@ export async function POST(req: Request) {
       firstName,
       verificationToken,
       digitalId,
+      onboarding_step,
+      completeProfileUrl,
       metadata = {}
     } = body;
 
@@ -67,7 +76,7 @@ export async function POST(req: Request) {
     const supabase = await createClient();
     
     // Handle verification email
-    let verificationUrl = '';
+    let url = '';
     if (templateKey === 'verify') {
       // Generate verification token if not provided
       let token = verificationToken;
@@ -95,7 +104,7 @@ export async function POST(req: Request) {
       }
       
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `https://${req.headers.get('host')}`;
-      verificationUrl = `${baseUrl}/api/auth/verify?token=${token}&email=${encodeURIComponent(email)}`;
+      url = `${baseUrl}/api/auth/verify?token=${token}&email=${encodeURIComponent(email)}`;
     }
 
     // Fetch additional user data if needed
@@ -114,8 +123,10 @@ export async function POST(req: Request) {
     const emailProps: EmailTemplateProps = {
       firstName: userFirstName || 'there',
       email,
-      verificationUrl,
+      url,
       digitalId,
+      onboarding_step,
+      completeProfileUrl,
       ...metadata,
     };
 
@@ -129,7 +140,7 @@ export async function POST(req: Request) {
 
     if (error) {
       console.error('Resend error:', error);
-      return NextResponse.json({ error }, { status: 500 });
+      return NextResponse.json({ error }, { status: 500 } satisfies ResponseInit);
     }
 
     // Log email sent (optional)
@@ -149,7 +160,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ 
       success: true, 
       data,
-      ...(verificationUrl && { verificationUrl }) // Include URL in response for testing
+      ...(url && { url }) // Include URL in response for testing
     });
     
   } catch (error) {

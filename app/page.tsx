@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import { createClient } from '@/utils/supabase/client'
 import { useEffect } from "react";
 import { useSearchParams } from 'next/navigation';
+import { getOnboardingEmailUrl } from '@/lib/utils';
+
 
 export default function HomePage() {
   const router = useRouter();
@@ -67,7 +69,77 @@ export default function HomePage() {
     if (!isValid || !isCorporate || submitting) return;
 
     try {
-      // --- Custom Supabase logic for onboarding and email_verifications ---
+       // Check if email exists in users table
+       const { data: userData, error: userError } = await supabase
+       .from('users')
+       .select('onboarding_step')
+       .eq('email', email)
+       .single();
+
+     if (userData) {
+       console.log('onboarding_step:', userData.onboarding_step);
+
+       if (userData.onboarding_step === 2) {
+         // Send incomplete profile email
+         await fetch('/api/send', {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({
+             template: 'incomplete_profile',
+             email: email,
+             onboarding_step: userData.onboarding_step,
+           }),
+         });
+         setSubmitting(false);
+         return;
+       }
+
+       if (userData.onboarding_step === 1) {
+         // Re-trigger the magic link flow (send a new verification email)
+         const token_hash = crypto.randomUUID();
+         const nowNotIso = new Date();
+         const now = nowNotIso.toISOString();
+         const expiresAt = new Date(nowNotIso.getTime() + 60 * 60 * 1000).toISOString();
+
+         // Insert a new verification record
+         await supabase
+           .from('email_verifications')
+           .insert({
+             email: email,
+             expires_at: expiresAt,
+             used: false,
+             created_at: now,
+           });
+
+         const { url } = getOnboardingEmailUrl({
+           onboarding_step: userData.onboarding_step,
+           token_hash,
+           appUrl: process.env.NEXT_PUBLIC_APP_URL
+         });
+
+         // Send the magic link
+         const { error } = await supabase.auth.signInWithOtp({
+           email: email,
+           options: {
+             emailRedirectTo: url,
+             shouldCreateUser: false, // user already exists
+           }
+         });
+
+         if (error) throw error;
+         if (typeof window !== "undefined") {
+           localStorage.setItem(`emailSent:${email}`, Date.now().toString());
+         }
+         setEmailSent(true);
+         setSubmitting(false);
+         return;
+       }
+
+       setSubmitting(false);
+       return;
+     }
+
+     // --- Custom Supabase logic for onboarding and email_verifications for new users ---
       // Generate a token_hash (for demo, use crypto.randomUUID())
       const token_hash = crypto.randomUUID();
       const nowNotIso = new Date();
@@ -96,10 +168,15 @@ export default function HomePage() {
         });
       // --- End custom logic ---
       // This triggers Supabase Auth which triggers the Auth Hook
+      const { url } = getOnboardingEmailUrl({
+        onboarding_step: 1,
+        token_hash,
+        appUrl: process.env.NEXT_PUBLIC_APP_URL
+      });
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?my_token=${token_hash}&next=/onboarding/step-2`,
+          emailRedirectTo: url,
           shouldCreateUser: true,
         }
       })

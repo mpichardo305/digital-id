@@ -1,6 +1,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
+import VerifyEmailAndReturn from '../../../components/email/verify-email-and-return.tsx';
+import IncompleteProfileEmail from '../../../components/email/incomplete-profile.tsx';
+import { getOnboardingEmailUrl } from '../../../lib/utils.ts';
 // Environment variables
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
@@ -26,13 +28,29 @@ serve(async (req) => {
     
     // Check if this is an auth webhook with user and email_data
     if (body.user && body.email_data) {
-      const { user, email_data } = body;
-      
-      // Build the verification URL using the token from Supabase
-      const verificationUrl = `${APP_URL}/auth/callback?token_hash=${email_data.token_hash}&type=${email_data.email_action_type}&next=/onboarding/step-2`;
-      
-      console.log(`Sending verification email to ${user.email} with URL: ${verificationUrl}`);
-      
+      const { user, email_data, type = "verify", onboarding_step = 1 } = body;
+
+      const token_hash = email_data.token_hash;
+      const { url } = getOnboardingEmailUrl({ onboarding_step, token_hash, appUrl: APP_URL });
+
+      console.log(`Sending ${type} email to ${user.email} with URL: ${url}`);
+
+      let emailHtml;
+      if (type === "complete_profile") {
+        emailHtml = IncompleteProfileEmail({
+          firstName: user.firstName,
+          url,
+          supportEmail: "contact@trydigitalid.com",
+        });
+      } else {
+        // Default to verify
+        emailHtml = VerifyEmailAndReturn({
+          firstName: user.firstName,
+          url,
+          supportEmail: "contact@trydigitalid.com",
+        });
+      }
+
       // Send email directly using Resend API with fetch
       try {
         const response = await fetch("https://api.resend.com/emails", {
@@ -44,19 +62,17 @@ serve(async (req) => {
           body: JSON.stringify({
             from: "Digital ID <onboarding@updates.trydigitalid.com>",
             to: [user.email],
-            subject: "Verify your Digital ID email",
-            html: `
-              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <h2>Verify your email address</h2>
-                <p>Thanks for signing up! Please verify your email address by clicking the button below:</p>
-                <a href="${verificationUrl}" style="display: inline-block; padding: 12px 24px; background-color: #000; color: #fff; text-decoration: none; border-radius: 5px;">
-                  Verify Email and Return to Form
-                </a>
-                <p style="margin-top: 20px; font-size: 12px; color: #666;">
-                  This link will expire in 1 hour. If you didn't request this, you can safely ignore this email.
-                </p>
-              </div>
-            `
+            subject: (() => {
+              switch (type) {
+                case "complete_profile":
+                  return "Complete your Digital ID profile";
+                // Add more cases here as you add more types
+                case "verify":
+                default:
+                  return "Verify your Digital ID email";
+              }
+            })(),
+            html: emailHtml, // <-- dynamic template
           })
         });
         
@@ -76,7 +92,7 @@ serve(async (req) => {
             .from("email_logs")
             .insert({
               user_id: user.id,
-              template: "verify",
+              template: type,
               sent_to: user.email,
               sent_at: new Date().toISOString(),
               resend_id: data.id,
@@ -87,13 +103,13 @@ serve(async (req) => {
         }
         
         return new Response(
-          JSON.stringify({ success: true, message: "Verification email sent successfully" }),
+          JSON.stringify({ success: true, message: `${type} email sent successfully` }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       } catch (emailError) {
         console.error("Failed to send email:", emailError);
         return new Response(
-          JSON.stringify({ error: "Failed to send verification email", details: emailError.message }),
+          JSON.stringify({ error: `Failed to send ${type} email`,  details: emailError instanceof Error ? emailError.message : String(emailError), }),
           { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -109,7 +125,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Error processing webhook:", error);
     return new Response(
-      JSON.stringify({ error: "Internal server error", details: error.message }),
+      JSON.stringify({ error: "Internal server error",  details: error instanceof Error ? error.message : String(error), }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
