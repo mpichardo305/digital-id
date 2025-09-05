@@ -48,11 +48,13 @@ export default function VerifyEmailAndReturn({
 
               <div style={{ paddingTop: 24 }}>
                 <Button href={url} style={styles.cta}>
-                  Verify email and return to form
+                  Verify email
                 </Button>
               </div>
 
               <div style={{ paddingTop: 24 }} />
+              <Text style={styles.p}>After verifying you'll return to the form</Text>
+              <div style={{ paddingTop: 12 }} />
               <Text style={styles.p}>
                 If you did not initiate this verification or have any concerns, please contact our support team
                 immediately at <Link href={`mailto:${supportEmail}`} style={styles.footerLink}>{supportEmail}</Link>.

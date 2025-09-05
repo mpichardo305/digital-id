@@ -23,9 +23,7 @@ export default function OnboardingStep3() {
             }}
           >
             <div className="mx-auto max-w-[640px] px-2 pt-4">
-              <h2 className="text-[#625B71] whitespace-nowrap text-xl leading-9">
-                Your Digital ID is processing!
-              </h2>
+              
 
               {/* Horizontal Progress Steps */}
               <div className="grid grid-cols-5 items-start py-12 max-w-md mx-auto">
@@ -71,17 +69,19 @@ export default function OnboardingStep3() {
               </div>
 
               <div className="flex flex-col items-center space-y-8 py-6">
-              <div className="text-center">
-                    <h3 className="text-xl font-semibold mb-2">Thank you for your patience</h3>
+              <div className="text-left">
+                    <h2 className="text-[#625B71] whitespace-nowrap text-xl leading-9">
+                      Your Digital ID is processing!
+                    </h2>
                     <p className="text-gray-600">
-                        We're working on your Digital ID. You'll receive an email when it's ready.
+                        We're working on your Digital ID. You'll receive an email notification when it's ready.
                     </p>
                 </div>
-                <div className="flex items-center justify-center space-x-3 my-4 mt-20 mb-40">                
+                {/* <div className="flex items-center justify-center space-x-3 my-4 mt-20 mb-40">                
                   <div className="w-3 h-3 bg-black rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
                   <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   <div className="w-3 h-3 bg-purple-300 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                </div>
+                </div> */}
                 {/* <Button
                   onClick={() => window.location.href = "/thank-you"}
                   className="w-full bg-black text-white py-6 text-base font-medium rounded-full hover:bg-gray-800 transition-colors"
